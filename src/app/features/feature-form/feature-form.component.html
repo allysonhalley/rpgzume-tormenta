@@ -1,0 +1,75 @@
+<mat-toolbar color="primary">
+  <span>{{ isEditMode ? 'Editar' : 'Criar' }} Feature</span>
+</mat-toolbar>
+<mat-divider class="divider"></mat-divider>
+  <mat-card class="card">
+    <mat-card-content>
+      <!-- Nome -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nome</mat-label>
+        <input matInput [(ngModel)]="feature.name">
+      </mat-form-field>
+
+      <mat-divider class="divider"></mat-divider>
+
+      <!-- Informações do Card -->
+      <mat-card-subtitle class="subtitle">Informações do Card</mat-card-subtitle>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Resumo</mat-label>
+        <textarea matInput rows="2" [(ngModel)]="feature.resume"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descrição</mat-label>
+        <textarea matInput rows="3" [(ngModel)]="feature.description"></textarea>
+      </mat-form-field>
+
+      <!-- Grid para Livro e Página -->
+      <div class="grid-container">
+        <mat-form-field appearance="outline" class="grid-item">
+          <mat-label>Livro</mat-label>
+          <input matInput [(ngModel)]="feature.book">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="grid-item">
+          <mat-label>Página</mat-label>
+          <input matInput type="number" [(ngModel)]="feature.page">
+        </mat-form-field>
+      </div>
+
+      <mat-divider class="divider"></mat-divider>
+
+      <!-- Informações da Feature -->
+      <mat-card-subtitle class="subtitle">Informações da Feature</mat-card-subtitle>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Pré-requisitos</mat-label>
+        <input matInput [(ngModel)]="feature.prerequisites">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Benefício</mat-label>
+        <textarea matInput rows="2" [(ngModel)]="feature.benefit"></textarea>
+      </mat-form-field>
+
+      <!-- Grid para Normal e Especial -->
+      <div class="grid-container">
+        <mat-form-field appearance="outline" class="grid-item">
+          <mat-label>Normal</mat-label>
+          <input matInput [(ngModel)]="feature.normal">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="grid-item">
+          <mat-label>Especial</mat-label>
+          <input matInput [(ngModel)]="feature.special">
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-raised-button color="primary" (click)="save()">Salvar</button>
+      <button mat-raised-button color="warn" (click)="deleteFeature()" *ngIf="isEditMode">Excluir</button>
+      <button mat-raised-button color="accent" (click)="cancel()">Cancelar</button>
+    </mat-card-actions>
+  </mat-card>

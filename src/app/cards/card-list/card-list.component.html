@@ -1,0 +1,57 @@
+<mat-toolbar color="primary">
+  <span>Card List</span>
+  <span class="spacer"></span>
+  <button mat-icon-button (click)="addCard()">
+    <mat-icon>add</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="main-container">
+
+  <!-- Features Section -->
+  <div *ngIf="featuresList.length > 0">
+    <h2>Features</h2>
+    <div class="container">
+      <mat-card class="card" *ngFor="let card of featuresList" appearance="outlined" (click)="editCard(card.id)"
+        style="cursor: pointer;">
+        <mat-card-header base="elevated-container-shape">
+          <mat-card-title>{{ card.name }}</mat-card-title>
+          <mat-card-subtitle *ngIf="card.featureType">Tipo: {{ card.featureType }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-divider></mat-divider>
+          <p><strong>Resumo: </strong>{{ card.resume }}</p>
+          <p><strong>Descrição: </strong>{{ card.description }}</p>
+        </mat-card-content>
+        <mat-card-footer>
+          Livro: {{ card.book }} || Página: {{ card.page }}
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+
+  <mat-divider class="section-divider" *ngIf="featuresList.length > 0 && magicsList.length > 0"></mat-divider>
+
+  <!-- Magics Section -->
+  <div *ngIf="magicsList.length > 0">
+    <h2>Magics</h2>
+    <div class="container">
+      <mat-card class="card" *ngFor="let card of magicsList" appearance="outlined" (click)="editCard(card.id)"
+        style="cursor: pointer;">
+        <mat-card-header base="elevated-container-shape">
+          <mat-card-title>{{ card.name }}</mat-card-title>
+          <mat-card-subtitle *ngIf="card.school">Escola: {{ card.school }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-divider></mat-divider>
+          <p><strong>Resumo: </strong>{{ card.resume }}</p>
+          <p><strong>Descrição: </strong>{{ card.description }}</p>
+        </mat-card-content>
+        <mat-card-footer>
+          Livro: {{ card.book }} || Página: {{ card.page }}
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+
+</div>

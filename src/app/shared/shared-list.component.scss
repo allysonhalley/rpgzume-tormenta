@@ -1,0 +1,72 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // Garante duas colunas em telas grandes
+  gap: 16px;
+  padding: 16px;
+  max-width: 1200px; // Define um limite para não ocupar toda a tela
+  margin: 0 auto; // Centraliza os elementos
+}
+
+.card {
+  width: 100%;
+  max-width: 500px; // Limita a largura dos cards
+  box-sizing: border-box;
+}
+
+mat-card {
+  display: flex;
+  flex-direction: column;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-card-title {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+mat-card-subtitle {
+  font-weight: bold;
+  color: gray;
+}
+
+mat-card-content {
+  p {
+    margin: 4px 0;
+    line-height: 1.3;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    text-align: justify;
+    text-align-last: left;
+  }
+}
+
+mat-card-footer {
+  margin-top: 8px;
+  font-size: 0.9em;
+  color: gray;
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+.add-feature-button::after {
+  content: " +"; // Adiciona o símbolo "+"
+  font-size: 16px;
+  font-weight: bold;
+}
+
+
+// ✅ Responsividade: Ajusta para uma coluna em telas menores
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr; // Apenas uma coluna em telas menores
+  }
+}
