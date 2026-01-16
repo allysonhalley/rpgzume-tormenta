@@ -1,0 +1,117 @@
+[
+  {
+    "card": {
+      "name": "Bola de Fogo",
+      "resume": "Explosão mágica que causa dano em área.",
+      "description": "Uma esfera de fogo que explode ao atingir o alvo, causando dano em área.",
+      "book": "Livro do Mago",
+      "page": 250
+    },
+    "type": "Evocação",
+    "level": "3",
+    "components": "Verbal, Somático, Material",
+    "castTime": "1 ação",
+    "range": "150 metros",
+    "targetArea": "Raio de 6 metros",
+    "duration": "Instantâneo",
+    "savingThrow": "Reflexos metade",
+    "spellResistance": "Sim",
+    "effect": "Causa 6d6 de dano de fogo em todas as criaturas na área.",
+    "prerequisites": "Capacidade de lançar magias de nível 3",
+    "benefit": "Aumenta o dano em +1d6 para cada nível acima do 3º.",
+    "normal": "Causa dano padrão sem modificadores.",
+    "special": "Pode ser moldada para poupar aliados na área."
+  },
+  {
+    "card": {
+      "name": "Armadura Arcana",
+      "resume": "Cria uma armadura mágica ao redor do usuário.",
+      "description": "Uma barreira de energia que protege o conjurador contra ataques.",
+      "book": "Livro do Arcanista",
+      "page": 45
+    },
+    "type": "Abjuração",
+    "level": "1",
+    "components": "Verbal, Somático",
+    "castTime": "1 ação bônus",
+    "range": "Pessoal",
+    "targetArea": "Usuário",
+    "duration": "8 horas",
+    "savingThrow": "Nenhum",
+    "spellResistance": "Não",
+    "effect": "Aumenta a Classe de Armadura em +4.",
+    "prerequisites": "Conhecimento básico de Abjuração",
+    "benefit": "Não impede o uso de armadura normal.",
+    "normal": "Sem proteção adicional.",
+    "special": "Pode ser compartilhada com um aliado em alcance."
+  },
+  {
+    "card": {
+      "name": "Mãos Flamejantes",
+      "resume": "Chamas disparadas das mãos do conjurador.",
+      "description": "Projeta um cone de fogo em frente ao conjurador, causando dano.",
+      "book": "Compêndio de Feitiços",
+      "page": 89
+    },
+    "type": "Evocação",
+    "level": "1",
+    "components": "Verbal, Somático",
+    "castTime": "1 ação",
+    "range": "15 metros",
+    "targetArea": "Cone de 15 metros",
+    "duration": "Instantâneo",
+    "savingThrow": "Reflexos metade",
+    "spellResistance": "Sim",
+    "effect": "Causa 3d6 de dano de fogo.",
+    "prerequisites": "Capacidade de lançar magias de nível 1",
+    "benefit": "Pode ser usado como reação a ataques próximos.",
+    "normal": "Causa dano padrão.",
+    "special": "Conjuradores avançados podem dobrar o alcance."
+  },
+  {
+    "card": {
+      "name": "Invisibilidade",
+      "resume": "Torna o alvo invisível.",
+      "description": "O alvo se torna indetectável visualmente, embora possa ser ouvido ou tocado.",
+      "book": "Tomo do Ladino",
+      "page": 142
+    },
+    "type": "Ilusão",
+    "level": "2",
+    "components": "Verbal, Somático",
+    "castTime": "1 ação",
+    "range": "Toque",
+    "targetArea": "Uma criatura ou objeto",
+    "duration": "1 hora",
+    "savingThrow": "Nenhum",
+    "spellResistance": "Não",
+    "effect": "O alvo desaparece da visão.",
+    "prerequisites": "Conhecimento básico de Ilusão",
+    "benefit": "Permite furtividade sem penalidades.",
+    "normal": "Apenas invisibilidade básica.",
+    "special": "Pode ser estendida para um grupo com um ponto adicional de magia."
+  },
+  {
+    "card": {
+      "name": "Cura Completa",
+      "resume": "Restaura completamente a saúde do alvo.",
+      "description": "Remove todas as condições negativas e restaura todos os pontos de vida.",
+      "book": "Manual do Clérigo",
+      "page": 310
+    },
+    "type": "Conjuração",
+    "level": "6",
+    "components": "Verbal, Somático",
+    "castTime": "1 ação",
+    "range": "Toque",
+    "targetArea": "Uma criatura",
+    "duration": "Instantâneo",
+    "savingThrow": "Nenhum",
+    "spellResistance": "Sim",
+    "effect": "Restaura completamente a saúde e remove todas as condições.",
+    "prerequisites": "Capacidade de lançar magias de nível 6",
+    "benefit": "Revive uma criatura caída sem custo adicional.",
+    "normal": "Restaura apenas pontos de vida.",
+    "special": "Pode ser conjurada à distância por +1 ponto de magia."
+  }
+]
