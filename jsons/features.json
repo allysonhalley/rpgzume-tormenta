@@ -1,0 +1,67 @@
+[
+  {
+    "card": {
+      "name": "Ataque Poderoso",
+      "resume": "Permite trocar bônus de ataque por dano extra.",
+      "description": "Você pode optar por reduzir sua chance de acertar em combate para causar mais dano.",
+      "book": "Livro do Jogador",
+      "page": 98
+    },
+    "prerequisites": "Força 13",
+    "benefit": "Antes de realizar um ataque corpo a corpo, você pode optar por subtrair um número do seu bônus de ataque e adicioná-lo ao dano causado.",
+    "normal": "Você não pode trocar bônus de ataque por dano.",
+    "special": "Quando usado com armas de duas mãos, o dano adicional é aumentado em 50%."
+  },
+  {
+    "card": {
+      "name": "Reflexos Rápidos",
+      "resume": "Permite realizar mais de um ataque de oportunidade por rodada.",
+      "description": "Com este talento, você pode reagir mais rapidamente em combate.",
+      "book": "Livro do Jogador",
+      "page": 101
+    },
+    "prerequisites": "Destreza 13",
+    "benefit": "Você pode realizar um número de ataques de oportunidade igual ao seu modificador de Destreza.",
+    "normal": "Sem este talento, você só pode realizar um ataque de oportunidade por rodada.",
+    "special": "Este talento é especialmente útil para personagens que combatem em áreas de movimentação intensa."
+  },
+  {
+    "card": {
+      "name": "Foco em Arma",
+      "resume": "Concede bônus em ataques com uma arma específica.",
+      "description": "Você se tornou mais eficiente no uso de uma arma escolhida.",
+      "book": "Livro do Jogador",
+      "page": 94
+    },
+    "prerequisites": "Bônus base de ataque +1",
+    "benefit": "Você recebe +1 em jogadas de ataque com a arma escolhida.",
+    "normal": "Sem este talento, você não recebe bônus adicional em jogadas de ataque.",
+    "special": "Você pode escolher este talento várias vezes, aplicando-o a uma arma diferente a cada vez."
+  },
+  {
+    "card": {
+      "name": "Esquiva",
+      "resume": "Aumenta sua CA contra um inimigo escolhido.",
+      "description": "Sua capacidade de evitar ataques direcionados aumenta quando você foca em um inimigo específico.",
+      "book": "Livro do Jogador",
+      "page": 93
+    },
+    "prerequisites": "Destreza 13",
+    "benefit": "Durante o seu turno, você pode escolher um oponente. Você recebe um bônus de esquiva de +1 na CA contra ataques desse oponente.",
+    "normal": "Sem este talento, você não recebe bônus adicional de esquiva.",
+    "special": "Um bônus de esquiva se acumula com outros bônus de esquiva."
+  },
+  {
+    "card": {
+      "name": "Investida Montada",
+      "resume": "Permite reduzir o dano recebido enquanto estiver montado.",
+      "description": "Com este talento, você pode proteger sua montaria durante ataques em investidas.",
+      "book": "Livro do Jogador",
+      "page": 99
+    },
+    "prerequisites": "Perícia Montaria 1 grad.",
+    "benefit": "Quando sua montaria for atacada, você pode realizar um teste de Montaria para redirecionar o ataque contra você.",
+    "normal": "Sem este talento, sua montaria não recebe proteção adicional.",
+    "special": "Este talento é particularmente útil para cavaleiros e personagens montados."
+  }
+]
