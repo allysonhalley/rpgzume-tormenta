@@ -1,0 +1,45 @@
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.card {
+  width: auto;
+  height: 32px;
+  max-width: 700px; // Maior espaço para melhor legibilidade
+  padding: 24px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr; // Padrão: uma coluna
+  gap: 16px; // Espaço maior entre os campos
+}
+
+// ✅ Em telas maiores, os campos serão exibidos lado a lado
+@media (min-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr); // Duas colunas somente em telas largas
+  }
+}
+
+.grid-item {
+  min-width: 200px; // Define um tamanho mínimo para evitar amontoamento
+}
+
+mat-card-subtitle {
+  font-weight: bold;
+  margin-top: 20px; // Mais espaço acima dos subtítulos
+  display: block;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 16px;
+}
+
+.divider {
+  margin: 16px 0; // Melhora a separação visual
+}

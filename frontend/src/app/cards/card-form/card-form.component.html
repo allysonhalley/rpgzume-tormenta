@@ -1,0 +1,67 @@
+<mat-toolbar color="primary">
+    <span>{{ isEditMode ? 'Editar Card' : 'Novo Card' }}</span>
+</mat-toolbar>
+
+<div class="container">
+    <mat-card>
+        <mat-card-content>
+            <form (ngSubmit)="save()" #cardForm="ngForm">
+                <div class="row">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Nome</mat-label>
+                        <input matInput [(ngModel)]="card.name" name="name" required>
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <mat-form-field appearance="outline" class="half-width">
+                        <mat-label>Tipo</mat-label>
+                        <input matInput [(ngModel)]="card.type" name="type" required>
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Resumo</mat-label>
+                        <textarea matInput [(ngModel)]="card.resume" name="resume" rows="2"></textarea>
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Descrição</mat-label>
+                        <textarea matInput [(ngModel)]="card.description" name="description" rows="5"></textarea>
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <mat-form-field appearance="outline" class="half-width">
+                        <mat-label>Livro</mat-label>
+                        <input matInput [(ngModel)]="card.book" name="book">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="half-width">
+                        <mat-label>Página</mat-label>
+                        <input matInput type="number" [(ngModel)]="card.page" name="page">
+                    </mat-form-field>
+                </div>
+
+                <div class="actions">
+                    <button mat-raised-button color="primary" type="submit" [disabled]="!cardForm.valid">
+                        Salvar
+                    </button>
+
+                    <button mat-button type="button" (click)="cancel()">
+                        Cancelar
+                    </button>
+
+                    <span class="spacer"></span>
+
+                    <button mat-icon-button color="warn" type="button" *ngIf="isEditMode" (click)="deleteCard()">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>
