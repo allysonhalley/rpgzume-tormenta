@@ -32,7 +32,7 @@ import { Feature } from '../../core/models/models';
 })
 export class FeatureFormComponent implements OnInit {
   feature: Feature = {
-    id: '',
+    // id is undefined for new features
     type: 'feature',
     name: '',
     resume: '',
@@ -51,7 +51,7 @@ export class FeatureFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private featureService: FeatureService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -63,8 +63,8 @@ export class FeatureFormComponent implements OnInit {
   }
 
   async save() {
-    if (this.isEditMode) {
-      await this.featureService.updateFeature(this.feature.id, this.feature);
+    if (this.isEditMode && this.feature.id) {
+      await this.featureService.updateFeature(this.feature.id!, this.feature);
     } else {
       await this.featureService.createFeature(this.feature);
     }
@@ -73,7 +73,7 @@ export class FeatureFormComponent implements OnInit {
 
   async deleteFeature() {
     if (this.feature.id) {
-      await this.featureService.deleteFeature(this.feature.id);
+      await this.featureService.deleteFeature(this.feature.id!);
       this.router.navigate(['/features']);
     }
   }

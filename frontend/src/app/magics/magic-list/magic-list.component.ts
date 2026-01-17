@@ -35,7 +35,9 @@ export class MagicListComponent implements OnInit {
     this.router.navigate(['/magics/new']);
   }
 
-  editMagic(id: string) {
-    this.router.navigate(['/magics/edit', id]);
+  editMagic(id: string | undefined) {
+    if (id) {
+      this.router.navigate(['/magics/edit', id]);
+    }
   }
 }

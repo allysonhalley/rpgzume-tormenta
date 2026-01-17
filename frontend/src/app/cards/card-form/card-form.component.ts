@@ -34,7 +34,7 @@ import { Card } from '../../core/models/models';
 })
 export class CardFormComponent implements OnInit {
     card: Card = {
-        id: '',
+        // id is undefined for new cards
         type: '',
         name: '',
         resume: '',
@@ -66,8 +66,8 @@ export class CardFormComponent implements OnInit {
 
     async save() {
         try {
-            if (this.isEditMode) {
-                await this.cardService.updateCard(this.card.id, this.card);
+            if (this.isEditMode && this.card.id) {
+                await this.cardService.updateCard(this.card.id!, this.card as Card);
             } else {
                 await this.cardService.createCard(this.card);
             }
@@ -80,7 +80,7 @@ export class CardFormComponent implements OnInit {
     async deleteCard() {
         if (this.card.id) {
             try {
-                await this.cardService.deleteCard(this.card.id);
+                await this.cardService.deleteCard(this.card.id!);
                 this.router.navigate(['/cards']);
             } catch (error) {
                 console.error('Error deleting card', error);

@@ -1,6 +1,6 @@
 -- Criação da tabela feature com relacionamento 1x1 com card
 CREATE TABLE IF NOT EXISTS magic (
-    id TEXT PRIMARY KEY UNIQUE NOT NULL, -- ID único para feature
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text, -- ID único para feature
     card_id TEXT NOT NULL, -- Relacionamento 1x1 com card
     type VARCHAR(255),
     school VARCHAR(255),

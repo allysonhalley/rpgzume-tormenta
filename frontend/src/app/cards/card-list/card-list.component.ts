@@ -46,7 +46,9 @@ export class CardListComponent implements OnInit {
     this.router.navigate(['/cards/new']);
   }
 
-  editCard(id: string) {
-    this.router.navigate(['/cards/edit', id]);
+  editCard(id: string | undefined) {
+    if (id) {
+      this.router.navigate(['/cards/edit', id]);
+    }
   }
 }

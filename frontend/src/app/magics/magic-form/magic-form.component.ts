@@ -34,7 +34,7 @@ import { Magic } from '../../core/models/models';
 })
 export class MagicFormComponent implements OnInit {
     magic: Magic = {
-        id: '',
+        // id is undefined for new magics
         name: '',
         level: '',
         book: '',
@@ -75,8 +75,8 @@ export class MagicFormComponent implements OnInit {
 
     async save() {
         try {
-            if (this.isEditMode) {
-                await this.magicService.updateMagic(this.magic.id, this.magic);
+            if (this.isEditMode && this.magic.id) {
+                await this.magicService.updateMagic(this.magic.id!, this.magic);
             } else {
                 await this.magicService.createMagic(this.magic);
             }
@@ -89,7 +89,7 @@ export class MagicFormComponent implements OnInit {
     async deleteMagic() {
         if (this.magic.id) {
             try {
-                await this.magicService.deleteMagic(this.magic.id);
+                await this.magicService.deleteMagic(this.magic.id!);
                 this.router.navigate(['/magics']);
             } catch (error) {
                 console.error('Error deleting magic', error);

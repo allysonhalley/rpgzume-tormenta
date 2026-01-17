@@ -1,5 +1,5 @@
 export interface Card {
-  id: string;
+  id?: string;
   type: string;
   name: string;
   resume: string;
@@ -9,7 +9,7 @@ export interface Card {
 }
 
 export interface Feature {
-  id: string;
+  id?: string;
   type: string;
   name: string;
   resume: string;
@@ -25,7 +25,7 @@ export interface Feature {
 }
 
 export interface Magic {
-  id: string;
+  id?: string;
   name: string;
   level: string;
   book: string;
