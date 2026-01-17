@@ -10,6 +10,7 @@
   <mat-card class="card" *ngFor="let feature of features" appearance="outlined">
     <mat-card-header base="elevated-container-shape">
       <mat-card-title>{{ feature.name }}</mat-card-title>
+      <mat-card-subtitle>{{ feature.featureType }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <mat-divider></mat-divider>

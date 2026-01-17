@@ -2,8 +2,8 @@
 CREATE TABLE IF NOT EXISTS feature (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text, -- ID único para feature
     card_id TEXT NOT NULL, -- Relacionamento 1x1 com card
-    feature_type VARCHAR(255),
-    prerequisites VARCHAR(255), -- Pré-requisitos
+    feature_type TEXT,
+    prerequisites TEXT, -- Pré-requisitos
     benefit TEXT, -- Benefícios
     normal TEXT, -- Descrição normal
     special TEXT, -- Descrição especial

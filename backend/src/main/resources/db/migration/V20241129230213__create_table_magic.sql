@@ -2,16 +2,16 @@
 CREATE TABLE IF NOT EXISTS magic (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text, -- ID único para feature
     card_id TEXT NOT NULL, -- Relacionamento 1x1 com card
-    type VARCHAR(255),
-    school VARCHAR(255),
-    level VARCHAR(255),
-    components VARCHAR(255),
-    cast_time VARCHAR(255),
-    range VARCHAR(255),
-    target_area VARCHAR(255),
-    duration VARCHAR(255),
-    saving_throw VARCHAR(255),
-    spell_resistance VARCHAR(255),
+    type TEXT,
+    school TEXT,
+    level TEXT,
+    components TEXT,
+    cast_time TEXT,
+    range TEXT,
+    target_area TEXT,
+    duration TEXT,
+    saving_throw TEXT,
+    spell_resistance TEXT,
     effect TEXT,
 
     CONSTRAINT fk_card FOREIGN KEY (card_id) REFERENCES card(id)
