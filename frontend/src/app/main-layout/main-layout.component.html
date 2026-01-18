@@ -3,7 +3,10 @@
   <button mat-button routerLink="/" routerLinkActive="active-link">Início</button>
   <button mat-button routerLink="/cards" routerLinkActive="active-link">Cards</button>
   <button mat-button routerLink="/features" routerLinkActive="active-link">Features</button>
-  <button mat-button routerLink="/magics" routrLinkActive="active-link">Magias</button>
+  <button mat-button routerLink="/magics" routerLinkActive="active-link">Magias</button>
+  <button mat-icon-button (click)="logout()" title="Sair" class="logout-btn">
+    <mat-icon>logout</mat-icon>
+  </button>
 </mat-toolbar>
 <div class="main-content">
   <router-outlet></router-outlet>

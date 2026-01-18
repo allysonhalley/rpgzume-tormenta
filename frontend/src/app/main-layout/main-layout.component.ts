@@ -5,6 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
+import { AuthService } from '../core/services/auth.service';
+
 @Component({
   selector: 'app-main-layout',
   standalone: true,
@@ -19,7 +21,13 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./main-layout.component.scss']
 })
 export class MainLayoutComponent {
+  constructor(private authService: AuthService) { }
+
   toggleMenu() {
     console.log('Menu button clicked'); // Pode ser expandido para ações futuras
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
