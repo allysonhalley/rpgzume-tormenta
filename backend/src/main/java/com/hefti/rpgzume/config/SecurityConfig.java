@@ -64,6 +64,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/cards/**").permitAll()
                         .requestMatchers("/api/features/**").permitAll()
                         .requestMatchers("/api/magics/**").permitAll()
+                        .requestMatchers("/api/racial-traits/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated());
 

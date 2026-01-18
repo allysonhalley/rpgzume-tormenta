@@ -6,6 +6,11 @@ import time
 import pdfplumber
 import google.generativeai as genai
 from db_connection import get_db_connection
+from dotenv import load_dotenv
+
+# Load .env explicitly from absolute path
+dotenv_path = r'c:\Users\allys\Dev\rpgzume-tormenta\.env'
+load_dotenv(dotenv_path)
 
 # Configure API
 # Expects GOOGLE_API_KEY in environment variables
@@ -69,6 +74,24 @@ def parse_with_gemini(text, mode="magic"):
         IMPORTANT: Do not return multiple lists. Put all items in one single "magics" list. Ensure valid JSON.
         Escape quotes inside strings properly.
         
+        Text to parse:
+        """
+    elif mode == "racial_traits":
+        prompt = """
+        You are an expert RPG parser. Extract all Races (Raças) and their traits from the following text.
+        Return a JSON object with a key "racial_traits" containing a list of objects.
+        
+        Each object MUST have these fields:
+        - name: string (Name of the race)
+        - description: string (The first paragraph found right below the race name)
+        - traits: string (A list of racial abilities/traits. Return as a single string with items separated by newlines or semicolons)
+        
+        Ignore headers, footers.
+        Structure:
+        {
+          "racial_traits": [ ... ]
+        }
+
         Text to parse:
         """
     else: # features
@@ -142,7 +165,10 @@ def parse_with_gemini(text, mode="magic"):
         # Parse JSON
         try:
              result = json.loads(cleaned_text)
-             items = result.get(mode + "s", [])
+             if mode == 'racial_traits':
+                 items = result.get('racial_traits', [])
+             else:
+                 items = result.get(mode + "s", [])
              print(f"Parsed {len(items)} items from JSON.")
              return items
         except json.JSONDecodeError:
@@ -242,10 +268,48 @@ def insert_features(features):
     cur.close()
     conn.close()
 
+def insert_racial_traits(items):
+    conn = get_db_connection()
+    if not conn: return
+    
+    cur = conn.cursor()
+    count = 0
+    print(f"Inserting {len(items)} racial traits...")
+    
+    for r in items:
+        try:
+            # Create Card
+            name = r.get('name', 'Unknown')
+            desc = r.get('description', '')
+            resume = "" # Requested to be null, but DB requires NOT NULL. Using empty string.
+            
+            cur.execute("""
+                INSERT INTO card (type, name, resume, description, book, page)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                RETURNING id;
+            """, ('racial_traits', name, resume, desc, 'Tormenta RPG', 0))
+            card_id = cur.fetchone()[0]
+            
+            # Create RacialTraits
+            cur.execute("""
+                INSERT INTO racial_traits (card_id, traits)
+                VALUES (%s, %s);
+            """, (card_id, r.get('traits', '')))
+            
+            conn.commit()
+            count += 1
+        except Exception as e:
+            conn.rollback()
+            print(f"Error inserting race {r.get('name')}: {e}")
+            
+    print(f"Inserted {count} races.")
+    cur.close()
+    conn.close()
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("pdf_path")
-    parser.add_argument("--mode", choices=['magic', 'feature'], required=True)
+    parser.add_argument("--mode", choices=['magic', 'feature', 'racial_traits'], required=True)
     parser.add_argument("--start", type=int, required=True)
     parser.add_argument("--end", type=int, required=True)
     parser.add_argument("--chunk_size", type=int, default=10, help="Pages per AI request")
@@ -276,8 +340,10 @@ def main():
         if data:
             if args.mode == 'magic':
                 insert_magics(data)
-            else:
+            elif args.mode == 'feature':
                 insert_features(data)
+            else:
+                insert_racial_traits(data)
         else:
             print("No data parsed for this chunk.")
             

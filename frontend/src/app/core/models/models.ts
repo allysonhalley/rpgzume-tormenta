@@ -44,3 +44,12 @@ export interface Magic {
   school?: string;
   featureType?: string; // Optional as it is null in example
 }
+
+export interface RacialTraits {
+  id?: string;
+  name: string;
+  description: string;
+  book: string;
+  page: number;
+  traits: string;
+}

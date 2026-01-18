@@ -31,4 +31,8 @@ public class Card {
     @com.fasterxml.jackson.annotation.JsonIgnore
     private Magic magic;
 
+    @OneToOne(mappedBy = "card")
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    private RacialTraits racialTraits;
+
 }
