@@ -8,28 +8,35 @@
   <mat-tab-group>
     <mat-tab *ngFor="let group of groupedMagics" [label]="group.type">
       <div class="tab-content-container">
-        <mat-card class="card" *ngFor="let magic of group.magics" appearance="outlined" (click)="editMagic(magic.id)"
-          style="cursor: pointer;">
-          <mat-card-header base="elevated-container-shape">
-            <mat-card-title>{{ magic.name }}</mat-card-title>
-            <mat-card-subtitle>{{ magic.magicType }} - {{ magic.school }} (Nível {{ magic.level }})</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            <mat-divider></mat-divider>
-            <p><strong>Componentes: </strong>{{ magic.components }}</p>
-            <p><strong>Tempo de Conjuração: </strong>{{ magic.castTime }}</p>
-            <p><strong>Alcance: </strong>{{ magic.range }}</p>
-            <p><strong>Área do Alvo: </strong>{{ magic.targetArea }}</p>
-            <p><strong>Duração: </strong>{{ magic.duration }}</p>
-            <p><strong>Teste de Resistência: </strong>{{ magic.savingThrow }}</p>
-            <p><strong>Resistência à Magia: </strong>{{ magic.spellResistance }}</p>
-            <p><strong>Efeito: </strong>{{ magic.effect }}</p>
-            <p><strong>Descrição: </strong>{{ magic.description }}</p>
-          </mat-card-content>
-          <mat-card-footer>
-            Livro: {{ magic.book }} || Página: {{ magic.page }}
-          </mat-card-footer>
-        </mat-card>
+        <mat-tab-group>
+          <mat-tab *ngFor="let levelGroup of group.levels" [label]="'Nível ' + levelGroup.level">
+            <div class="tab-content-container">
+              <mat-card class="card" *ngFor="let magic of levelGroup.magics" appearance="outlined"
+                (click)="editMagic(magic.id)" style="cursor: pointer;">
+                <mat-card-header base="elevated-container-shape">
+                  <mat-card-title>{{ magic.name }}</mat-card-title>
+                  <mat-card-subtitle>{{ magic.magicType }} - {{ magic.school }} (Nível {{ magic.level
+                    }})</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <mat-divider></mat-divider>
+                  <p><strong>Componentes: </strong>{{ magic.components }}</p>
+                  <p><strong>Tempo de Conjuração: </strong>{{ magic.castTime }}</p>
+                  <p><strong>Alcance: </strong>{{ magic.range }}</p>
+                  <p><strong>Área do Alvo: </strong>{{ magic.targetArea }}</p>
+                  <p><strong>Duração: </strong>{{ magic.duration }}</p>
+                  <p><strong>Teste de Resistência: </strong>{{ magic.savingThrow }}</p>
+                  <p><strong>Resistência à Magia: </strong>{{ magic.spellResistance }}</p>
+                  <p><strong>Efeito: </strong>{{ magic.effect }}</p>
+                  <p><strong>Descrição: </strong>{{ magic.description }}</p>
+                </mat-card-content>
+                <mat-card-footer>
+                  Livro: {{ magic.book }} || Página: {{ magic.page }}
+                </mat-card-footer>
+              </mat-card>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
       </div>
     </mat-tab>
   </mat-tab-group>

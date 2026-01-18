@@ -20,7 +20,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 })
 export class MagicListComponent implements OnInit {
   magics: Magic[] = [];
-  groupedMagics: { type: string, magics: Magic[] }[] = [];
+  groupedMagics: { type: string, levels: { level: string, magics: Magic[] }[] }[] = [];
 
   constructor(private magicService: MagicService, private router: Router) { }
 
@@ -35,22 +35,47 @@ export class MagicListComponent implements OnInit {
   }
 
   private groupMagics() {
-    const groups: { [key: string]: Magic[] } = {};
+    // 1. Group by Type
+    const typeGroups: { [type: string]: Magic[] } = {};
 
     this.magics.forEach(magic => {
-      // Normalize type to Title Case (Arcana/Divina) just in case
       let type = magic.magicType || 'Outros';
-      // Simple normalization if needed, but assuming DB has correct values
-      if (!groups[type]) {
-        groups[type] = [];
+      if (!typeGroups[type]) {
+        typeGroups[type] = [];
       }
-      groups[type].push(magic);
+      typeGroups[type].push(magic);
     });
 
-    this.groupedMagics = Object.keys(groups).sort().map(type => ({
-      type,
-      magics: groups[type]
-    }));
+    // 2. For each Type, Group by Level
+    this.groupedMagics = Object.keys(typeGroups).sort().map(type => {
+      const magicsByType = typeGroups[type];
+      const levelGroups: { [level: string]: Magic[] } = {};
+
+      magicsByType.forEach(magic => {
+        const level = magic.level || '0'; // Default to 0 if undefined
+        if (!levelGroups[level]) {
+          levelGroups[level] = [];
+        }
+        levelGroups[level].push(magic);
+      });
+
+      // Sort levels numerically
+      const sortedLevels = Object.keys(levelGroups).sort((a, b) => {
+        const numA = parseInt(a, 10);
+        const numB = parseInt(b, 10);
+        if (isNaN(numA)) return 1; // Put non-numbers at end
+        if (isNaN(numB)) return -1;
+        return numA - numB;
+      }).map(level => ({
+        level,
+        magics: levelGroups[level]
+      }));
+
+      return {
+        type,
+        levels: sortedLevels
+      };
+    });
   }
 
   addMagic() {
