@@ -1,1 +1,8 @@
 @import "../../shared/shared-list.component";
+
+.tab-content-container {
+    @extend .container;
+    // Adjust padding/margin if necessary since it's inside a tab
+    padding: 16px 0 0 0; 
+    width: 100%;
+}
