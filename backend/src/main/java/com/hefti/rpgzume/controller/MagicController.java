@@ -70,7 +70,7 @@ public class MagicController {
     private MagicDTO convertToDTO(Magic magic) {
         return new MagicDTO(
                 magic.getId(),
-                magic.getCard() != null ? magic.getCard().getType() : "magic",
+                magic.getMagicType(),
                 magic.getSchool(),
                 magic.getCard() != null ? magic.getCard().getName() : "Sem Nome",
                 magic.getLevel(),

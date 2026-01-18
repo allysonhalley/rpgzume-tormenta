@@ -112,7 +112,7 @@ ALTER TABLE public.flyway_schema_history OWNER TO postgres;
 CREATE TABLE public.magic (
     id text DEFAULT (gen_random_uuid())::text NOT NULL,
     card_id text NOT NULL,
-    type text,
+    magic_type text,
     school text,
     level text,
     components text,
@@ -970,7 +970,7 @@ COPY public.flyway_schema_history (installed_rank, version, description, type, s
 -- Data for Name: magic; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.magic (id, card_id, type, school, level, components, cast_time, range, target_area, duration, saving_throw, spell_resistance, effect) FROM stdin;
+COPY public.magic (id, card_id, magic_type, school, level, components, cast_time, range, target_area, duration, saving_throw, spell_resistance, effect) FROM stdin;
 39b6483e-345c-4d85-b166-f9c6645d10e7	e5e23861-c222-4596-8c9c-f257b3b89990	Divina	Cura	1	2,5kg de prata em pó (no valor de 25 TO).	1 minuto	toque	1 frasco de água	instantânea	nenhum	nenhum	
 aebfa5e5-2854-4922-b727-55871f1782c1	8c3d3724-9c2e-421f-98d5-936967cfeb75	Arcana	Transmutação	0	nenhum	ação de movimento	9m	1 objeto de até 20kg que possa ser aberto ou fechado	instantânea	nenhum	nenhum	
 3b7f9929-3a08-4989-978f-2db36de4ea6a	fd9a0aa3-f2db-4789-b80e-0d2344eeea9b	Divina	Encantamento	1	nenhum	ação padrão	9m	1 animal	1 minuto	Vontade anula	nenhum	

@@ -39,7 +39,7 @@ export class MagicFormComponent implements OnInit {
         level: '',
         book: '',
         page: 0,
-        type: '',
+        magicType: '',
         components: '',
         castTime: '',
         range: '',

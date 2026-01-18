@@ -20,7 +20,8 @@ public class Magic {
     @JoinColumn(name = "card_id", referencedColumnName = "id")
     private Card card; // Relacionamento com outra entidade chamada "Card"
 
-    private String type;
+    @Column(name = "magic_type")
+    private String magicType;
     private String level;
     private String components;
     private String castTime;
@@ -32,11 +33,12 @@ public class Magic {
     private String school;
     private String effect;
 
-    public Magic(Card card, String type, String school, String level, String components, String castTime, String range,
+    public Magic(Card card, String magicType, String school, String level, String components, String castTime,
+            String range,
             String targetArea, String duration, String savingThrow, String spellResistance, String effect) {
         this.card = card;
         this.card.setType("magic");
-        this.type = type;
+        this.magicType = magicType;
         this.school = school;
         this.level = level;
         this.components = components;

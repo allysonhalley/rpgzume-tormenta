@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS magic (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text, -- ID único para feature
     card_id TEXT NOT NULL, -- Relacionamento 1x1 com card
-    type TEXT,
+    magic_type TEXT,
     school TEXT,
     level TEXT,
     components TEXT,

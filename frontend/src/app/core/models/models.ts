@@ -30,7 +30,7 @@ export interface Magic {
   level: string;
   book: string;
   page: number;
-  type: string;
+  magicType: string;
   components: string;
   castTime: string;
   range: string;
