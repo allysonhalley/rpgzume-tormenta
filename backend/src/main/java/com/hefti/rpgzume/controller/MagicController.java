@@ -48,7 +48,7 @@ public class MagicController {
 
     @PostMapping("/fullmagic")
     public ResponseEntity<MagicDTO> createMagicWithCard(@RequestBody Magic magic) {
-        Magic savedMagic = magicService.createMagicWithCard(magic);
+        Magic savedMagic = magicService.createMagic(magic);
         return ResponseEntity.ok(convertToDTO(savedMagic));
     }
 
@@ -72,11 +72,11 @@ public class MagicController {
                 magic.getId(),
                 magic.getMagicType(),
                 magic.getSchool(),
-                magic.getCard() != null ? magic.getCard().getName() : "Sem Nome",
+                magic.getName(),
                 magic.getLevel(),
-                magic.getCard() != null ? magic.getCard().getResume() : "Sem Resumo",
-                magic.getCard() != null ? magic.getCard().getBook() : "Sem Livro",
-                magic.getCard() != null ? magic.getCard().getPage() : 0,
+                magic.getResume(),
+                magic.getBook(),
+                magic.getPage(),
                 magic.getComponents(),
                 magic.getCastTime(),
                 magic.getRange(),
@@ -85,6 +85,6 @@ public class MagicController {
                 magic.getSavingThrow(),
                 magic.getSpellResistance(),
                 magic.getEffect(),
-                magic.getCard() != null ? magic.getCard().getDescription() : "Sem Descrição");
+                magic.getDescription());
     }
 }

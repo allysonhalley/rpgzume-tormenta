@@ -49,7 +49,7 @@ public class FeatureController {
 
     @PostMapping("/fullfeature")
     public ResponseEntity<FeatureDTO> createFeatureWithCard(@RequestBody Feature feature) {
-        Feature savedFeature = featureService.createFeatureWithCard(feature);
+        Feature savedFeature = featureService.createFeature(feature);
         return ResponseEntity.ok(convertToDTO(savedFeature));
     }
 
@@ -72,13 +72,13 @@ public class FeatureController {
     private FeatureDTO convertToDTO(Feature feature) {
         return new FeatureDTO(
                 feature.getId(),
-                feature.getCard() != null ? feature.getCard().getType() : "feature",
+                feature.getType(),
                 feature.getFeatureType(),
-                feature.getCard() != null ? feature.getCard().getName() : "Sem Nome",
-                feature.getCard() != null ? feature.getCard().getResume() : "Sem Resumo",
-                feature.getCard() != null ? feature.getCard().getBook() : "Sem Livro",
-                feature.getCard() != null ? feature.getCard().getPage() : 0,
-                feature.getCard() != null ? feature.getCard().getDescription() : "Sem Descrição",
+                feature.getName(),
+                feature.getResume(),
+                feature.getBook(),
+                feature.getPage(),
+                feature.getDescription(),
                 feature.getPrerequisites(),
                 feature.getBenefit(),
                 feature.getNormal(),

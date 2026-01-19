@@ -54,7 +54,7 @@ export interface RacialTraits {
   traits: string;
 }
 
-export interface ClassAbilities {
+export interface ClassAbility {
   id?: string;
   name: string; // Class Name
   resume: string; // Ability Name
@@ -62,6 +62,17 @@ export interface ClassAbilities {
   book: string;
   page: number;
   abilities: string;
+}
+
+export interface PlayerClass {
+  id?: string;
+  name: string;
+  resume: string;
+  description: string;
+  book: string;
+  page: number;
+  traitClass?: string;
+  type: string;
 }
 
 export interface Character {

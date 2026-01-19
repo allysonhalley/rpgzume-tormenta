@@ -12,6 +12,10 @@ export class FeatureService {
     return axios.get(`${API_BASE_URL}`);
   }
 
+  async getFeatures() {
+    return this.getAllFeatures();
+  }
+
   async getFeatureById(id: string) {
     return axios.get(`${API_BASE_URL}/${id}`);
   }

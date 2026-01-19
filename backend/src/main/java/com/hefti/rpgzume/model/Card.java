@@ -3,14 +3,15 @@ package com.hefti.rpgzume.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Table(name = "card")
+@Table(name = "card") // Not a real table in TABLE_PER_CLASS, but logical name
 @Entity(name = "card")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Card {
+public abstract class Card {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,21 +23,4 @@ public class Card {
     private String book;
     private Integer page;
     private String type;
-
-    @OneToOne(mappedBy = "card")
-    @com.fasterxml.jackson.annotation.JsonIgnore
-    private Feature feature;
-
-    @OneToOne(mappedBy = "card")
-    @com.fasterxml.jackson.annotation.JsonIgnore
-    private Magic magic;
-
-    @OneToOne(mappedBy = "card")
-    @com.fasterxml.jackson.annotation.JsonIgnore
-    private RacialTraits racialTraits;
-
-    @OneToOne(mappedBy = "card")
-    @com.fasterxml.jackson.annotation.JsonIgnore
-    private ClassAbilities classAbilities;
-
 }

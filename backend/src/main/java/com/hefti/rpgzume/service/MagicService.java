@@ -16,12 +16,9 @@ import java.util.Optional;
 
 @Service
 public class MagicService {
-    
+
     @Autowired
     private MagicRepository magicRepository;
-    
-    @Autowired
-    private CardRepository cardRepository;
 
     @Autowired
     private PdfGeneratorService pdfGeneratorService;
@@ -36,10 +33,6 @@ public class MagicService {
     }
 
     public List<Magic> createMagics(List<Magic> magics) {
-        magics.forEach(magic -> {
-            magic.setCard(cardRepository.save(magic.getCard()));
-            createMagic(magic);
-        });
         return magicRepository.saveAll(magics);
     }
 
@@ -50,37 +43,22 @@ public class MagicService {
 
     // Atualizar uma magic
     public Magic updateMagic(Magic magic) {
-        // Certifique-se de que o card associado existe
-        Optional<Card> cardOptional = cardRepository.findById(magic.getCard().getId());
-        if (cardOptional.isEmpty()) {
-            throw new IllegalArgumentException("Card com ID " + magic.getCard().getId() + " não encontrado.");
+        if (!magicRepository.existsById(magic.getId())) {
+            throw new IllegalArgumentException("Magic com ID " + magic.getId() + " não encontrada.");
         }
-        magic.setCard(cardOptional.get());
         return magicRepository.save(magic);
     }
 
-    // Excluir uma magic e a entidade Card associada
+    // Excluir uma magic
     public void deleteMagic(String id) {
-        Optional<Magic> magicOptional = magicRepository.findById(id);
-        if (magicOptional.isPresent()) {
-            magicRepository.delete(magicOptional.get());
+        if (magicRepository.existsById(id)) {
+            magicRepository.deleteById(id);
         } else {
             throw new IllegalArgumentException("Magic com ID " + id + " não encontrada.");
         }
     }
 
-    // Buscar todas as magics de um card específico
-    public List<Magic> getMagicsByCard(String cardId) {
-        return magicRepository.findByCardId(cardId);
-    }
-
-    public Magic createMagicWithCard(Magic magic) {
-        Card card = magic.getCard();
-        if (card != null) {
-            magic.setCard(cardRepository.save(card));
-        }
-        return magicRepository.save(magic);
-    }
+    // Deprecated/Removed methods related to separate Card entity
 
     public void generatePdfAllMagics() throws JSONException {
         pdfGeneratorService.generateMagicPdf(getAllMagicsJson());

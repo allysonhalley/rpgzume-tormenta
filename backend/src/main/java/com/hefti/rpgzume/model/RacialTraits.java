@@ -9,17 +9,15 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
-public class RacialTraits {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+@EqualsAndHashCode(callSuper = true)
+public class RacialTraits extends Card {
 
     @Column(columnDefinition = "TEXT")
     private String traits;
 
-    @OneToOne
-    @JoinColumn(name = "card_id")
-    private Card card;
+    public RacialTraits(String name, String resume, String description, String book, Integer page, String type,
+            String traits) {
+        super(null, name, resume, description, book, page, type);
+        this.traits = traits;
+    }
 }

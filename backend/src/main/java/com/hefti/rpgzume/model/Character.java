@@ -28,17 +28,21 @@ public class Character {
 
     @ManyToOne
     @JoinColumn(name = "race_card_id", nullable = false)
-    private Card race;
+    private RacialTraits race;
 
     @ManyToOne
-    @JoinColumn(name = "class_card_id", nullable = false)
-    private Card classAbility;
+    @JoinColumn(name = "principal_class_id", nullable = false)
+    private PlayerClass principalClass;
 
     @ManyToMany
-    @JoinTable(name = "character_features", joinColumns = @JoinColumn(name = "character_id"), inverseJoinColumns = @JoinColumn(name = "card_id"))
-    private List<Card> features;
+    @JoinTable(name = "character_additional_classes", joinColumns = @JoinColumn(name = "character_id"), inverseJoinColumns = @JoinColumn(name = "player_class_id"))
+    private List<PlayerClass> additionalClasses;
 
     @ManyToMany
-    @JoinTable(name = "character_magics", joinColumns = @JoinColumn(name = "character_id"), inverseJoinColumns = @JoinColumn(name = "card_id"))
-    private List<Card> magics;
+    @JoinTable(name = "character_features", joinColumns = @JoinColumn(name = "character_id"), inverseJoinColumns = @JoinColumn(name = "feature_id"))
+    private List<Feature> features;
+
+    @ManyToMany
+    @JoinTable(name = "character_magics", joinColumns = @JoinColumn(name = "character_id"), inverseJoinColumns = @JoinColumn(name = "magic_id"))
+    private List<Magic> magics;
 }

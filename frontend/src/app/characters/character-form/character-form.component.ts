@@ -12,10 +12,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router } from '@angular/router';
 import { CharacterService } from '../character.service';
 import { RacialTraitsService } from '../../core/services/racial-traits.service';
-import { ClassAbilitiesService } from '../../core/services/class-abilities.service';
+import { PlayerClassService } from '../../core/services/player-class.service';
 import { FeatureService } from '../../core/services/feature.service';
 import { MagicService } from '../../core/services/magic.service';
-import { Character, RacialTraits, ClassAbilities, Feature, Magic } from '../../core/models/models';
+import { Character, RacialTraits, ClassAbility, Feature, Magic, PlayerClass } from '../../core/models/models';
 
 import { AuthService } from '../../core/services/auth.service';
 
@@ -48,14 +48,14 @@ export class CharacterFormComponent implements OnInit {
     };
 
     races: RacialTraits[] = [];
-    classes: ClassAbilities[] = []; // We need to flatten the grouped abilities or use a service that returns list
+    classes: PlayerClass[] = [];
     features: Feature[] = [];
     magics: Magic[] = [];
 
     constructor(
         private characterService: CharacterService,
         private racialTraitsService: RacialTraitsService,
-        private classAbilitiesService: ClassAbilitiesService,
+        private playerClassService: PlayerClassService,
         private featuresService: FeatureService,
         private magicsService: MagicService,
         private router: Router,
@@ -75,12 +75,11 @@ export class CharacterFormComponent implements OnInit {
 
     loadDependencies(): void {
         this.racialTraitsService.getAllRacialTraits().subscribe((data: RacialTraits[]) => this.races = data);
-        this.classAbilitiesService.getAllClassAbilities().subscribe((data: ClassAbilities[]) => {
-            // ClassAbilitiesService returns list of ClassAbilities (Card wrappers)
+        this.playerClassService.getAllPlayerClasses().subscribe((data: PlayerClass[]) => {
             this.classes = data;
         });
-        this.featuresService.getAllFeatures().then(response => this.features = response.data);
-        this.magicsService.getAllMagics().then(response => this.magics = response.data);
+        this.featuresService.getAllFeatures().then((response: any) => this.features = response.data);
+        this.magicsService.getAllMagics().then((response: any) => this.magics = response.data);
     }
 
     save(): void {

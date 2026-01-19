@@ -1,11 +1,19 @@
 package com.hefti.rpgzume.service;
 
 import com.hefti.rpgzume.dto.CharacterDTO;
-import com.hefti.rpgzume.model.Card;
 import com.hefti.rpgzume.model.Character;
+import com.hefti.rpgzume.model.Card;
+import com.hefti.rpgzume.model.Feature;
+import com.hefti.rpgzume.model.Magic;
+import com.hefti.rpgzume.model.PlayerClass;
+import com.hefti.rpgzume.model.RacialTraits;
 import com.hefti.rpgzume.user.User;
-import com.hefti.rpgzume.repository.CardRepository;
 import com.hefti.rpgzume.repository.CharacterRepository;
+import com.hefti.rpgzume.repository.RacialTraitsRepository;
+import com.hefti.rpgzume.repository.PlayerClassRepository;
+import com.hefti.rpgzume.repository.FeatureRepository;
+import com.hefti.rpgzume.repository.MagicRepository;
+import com.hefti.rpgzume.user.UserRepository;
 import com.hefti.rpgzume.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,14 +26,23 @@ public class CharacterService {
 
     private final CharacterRepository characterRepository;
     private final UserRepository userRepository;
-    private final CardRepository cardRepository;
+    private final RacialTraitsRepository racialTraitsRepository; // New
+    private final PlayerClassRepository playerClassRepository; // New
+    private final FeatureRepository featureRepository; // New
+    private final MagicRepository magicRepository; // New
 
     public CharacterService(CharacterRepository characterRepository,
             UserRepository userRepository,
-            CardRepository cardRepository) {
+            RacialTraitsRepository racialTraitsRepository,
+            PlayerClassRepository playerClassRepository,
+            FeatureRepository featureRepository,
+            MagicRepository magicRepository) {
         this.characterRepository = characterRepository;
         this.userRepository = userRepository;
-        this.cardRepository = cardRepository;
+        this.racialTraitsRepository = racialTraitsRepository;
+        this.playerClassRepository = playerClassRepository;
+        this.featureRepository = featureRepository;
+        this.magicRepository = magicRepository;
     }
 
     public List<CharacterDTO> getAllCharacters() {
@@ -51,25 +68,30 @@ public class CharacterService {
         User user = userRepository.findById(dto.userId())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        Card race = cardRepository.findById(dto.raceId())
+        RacialTraits race = racialTraitsRepository.findById(dto.raceId())
                 .orElseThrow(() -> new RuntimeException("Raça não encontrada"));
 
-        Card classAbility = cardRepository.findById(dto.classId())
-                .orElseThrow(() -> new RuntimeException("Classe não encontrada"));
+        PlayerClass principalClass = playerClassRepository.findById(dto.principalClassId())
+                .orElseThrow(() -> new RuntimeException("Classe Principal não encontrada"));
 
         Character character = new Character();
         character.setUser(user);
         character.setName(dto.name());
         character.setRace(race);
-        character.setClassAbility(classAbility);
+        character.setPrincipalClass(principalClass);
+
+        if (dto.additionalClassIds() != null && !dto.additionalClassIds().isEmpty()) {
+            List<PlayerClass> additionalClasses = playerClassRepository.findAllById(dto.additionalClassIds());
+            character.setAdditionalClasses(additionalClasses);
+        }
 
         if (dto.featureIds() != null && !dto.featureIds().isEmpty()) {
-            List<Card> features = cardRepository.findAllById(dto.featureIds());
+            List<Feature> features = featureRepository.findAllById(dto.featureIds());
             character.setFeatures(features);
         }
 
         if (dto.magicIds() != null && !dto.magicIds().isEmpty()) {
-            List<Card> magics = cardRepository.findAllById(dto.magicIds());
+            List<Magic> magics = magicRepository.findAllById(dto.magicIds());
             character.setMagics(magics);
         }
 
@@ -83,11 +105,15 @@ public class CharacterService {
 
     private CharacterDTO convertToDTO(Character character) {
         List<String> featureIds = character.getFeatures() != null
-                ? character.getFeatures().stream().map(Card::getId).collect(Collectors.toList())
+                ? character.getFeatures().stream().map(Feature::getId).collect(Collectors.toList())
                 : List.of();
 
         List<String> magicIds = character.getMagics() != null
-                ? character.getMagics().stream().map(Card::getId).collect(Collectors.toList())
+                ? character.getMagics().stream().map(Magic::getId).collect(Collectors.toList())
+                : List.of();
+
+        List<String> additionalClassIds = character.getAdditionalClasses() != null
+                ? character.getAdditionalClasses().stream().map(PlayerClass::getId).collect(Collectors.toList())
                 : List.of();
 
         return new CharacterDTO(
@@ -96,8 +122,9 @@ public class CharacterService {
                 character.getName(),
                 character.getRace().getId(),
                 character.getRace().getName(),
-                character.getClassAbility().getId(),
-                character.getClassAbility().getName(),
+                character.getPrincipalClass().getId(),
+                character.getPrincipalClass().getName(),
+                additionalClassIds,
                 featureIds,
                 magicIds);
     }

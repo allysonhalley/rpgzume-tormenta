@@ -20,9 +20,6 @@ public class FeatureService {
     private FeatureRepository featureRepository;
 
     @Autowired
-    private CardRepository cardRepository;  // Para associar uma feature a um card existente
-
-    @Autowired
     private PdfGeneratorService pdfGeneratorService;
 
     // Buscar todas as features
@@ -35,10 +32,6 @@ public class FeatureService {
     }
 
     public List<Feature> createFeatures(List<Feature> features) {
-        features.forEach(feature -> {
-            feature.setCard(cardRepository.save(feature.getCard()));
-            createFeature(feature);
-        });
         return featureRepository.saveAll(features);
     }
 
@@ -49,37 +42,22 @@ public class FeatureService {
 
     // Atualizar uma feature
     public Feature updateFeature(Feature feature) {
-        // Certifique-se de que o card associado existe
-        Optional<Card> cardOptional = cardRepository.findById(feature.getCard().getId());
-        if (cardOptional.isEmpty()) {
-            throw new IllegalArgumentException("Card com ID " + feature.getCard().getId() + " não encontrado.");
+        if (!featureRepository.existsById(feature.getId())) {
+            throw new IllegalArgumentException("Feature com ID " + feature.getId() + " não encontrada.");
         }
-        feature.setCard(cardOptional.get());
         return featureRepository.save(feature);
     }
 
-    // Excluir uma feature e a entidade Card associada
+    // Excluir uma feature
     public void deleteFeature(String id) {
-        Optional<Feature> featureOptional = featureRepository.findById(id);
-        if (featureOptional.isPresent()) {
-            featureRepository.delete(featureOptional.get());
+        if (featureRepository.existsById(id)) {
+            featureRepository.deleteById(id);
         } else {
             throw new IllegalArgumentException("Feature com ID " + id + " não encontrada.");
         }
     }
 
-    // Buscar todas as features de um card específico
-    public List<Feature> getFeaturesByCard(String cardId) {
-        return featureRepository.findByCardId(cardId);
-    }
-
-    public Feature createFeatureWithCard(Feature feature) {
-        Card card = feature.getCard();
-        if (card != null) {
-            feature.setCard(cardRepository.save(card));
-        }
-        return featureRepository.save(feature);
-    }
+    // Deprecated/Removed methods related to separate Card entity
 
     public void generatePdfAllFeatures() throws JSONException {
         pdfGeneratorService.generateFeaturePdf(getAllFeatureJson());

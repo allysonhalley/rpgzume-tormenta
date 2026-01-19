@@ -4,8 +4,8 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatListModule } from "@angular/material/list";
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
-import { ClassAbilities } from "../../core/models/models";
-import { ClassAbilitiesService } from "../../core/services/class-abilities.service";
+import { ClassAbility } from "../../core/models/models";
+import { ClassAbilityService } from "../../core/services/class-ability.service";
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -19,19 +19,19 @@ import { MatTabsModule } from '@angular/material/tabs';
     styleUrls: ['../../shared/shared-list.component.scss']
 })
 export class ClassAbilitiesListComponent implements OnInit {
-    classAbilities: ClassAbilities[] = [];
-    groupedAbilities: { [className: string]: ClassAbilities[] } = {};
+    classAbilities: ClassAbility[] = [];
+    groupedAbilities: { [className: string]: ClassAbility[] } = {};
     classNames: string[] = [];
 
-    constructor(private classAbilitiesService: ClassAbilitiesService) { }
+    constructor(private classAbilityService: ClassAbilityService) { }
 
     ngOnInit(): void {
-        this.classAbilitiesService.getAllClassAbilities().subscribe({
-            next: (data) => {
+        this.classAbilityService.getAllClassAbilities().subscribe({
+            next: (data: ClassAbility[]) => {
                 this.classAbilities = data;
                 this.groupAbilities();
             },
-            error: (error) => {
+            error: (error: any) => {
                 console.error('Erro ao buscar Habilidades de Classe:', error);
             }
         });
@@ -46,7 +46,7 @@ export class ClassAbilitiesListComponent implements OnInit {
             }
             acc[className].push(current);
             return acc;
-        }, {} as { [key: string]: ClassAbilities[] });
+        }, {} as { [key: string]: ClassAbility[] });
 
         this.classNames = Object.keys(this.groupedAbilities).sort();
     }

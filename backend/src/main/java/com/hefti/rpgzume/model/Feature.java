@@ -9,16 +9,8 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
-public class Feature {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true) // Cascata e remoção de órfãos
-    @JoinColumn(name = "card_id", referencedColumnName = "id")
-    private Card card;
+@EqualsAndHashCode(callSuper = true)
+public class Feature extends Card {
 
     private String prerequisites;
     private String benefit;
@@ -26,9 +18,9 @@ public class Feature {
     private String featureType;
     private String special;
 
-    public Feature(Card card, String featureType, String prerequisites, String benefit, String normal, String special) {
-        this.card = card;
-        this.card.setType("feature");
+    public Feature(String name, String resume, String description, String book, Integer page, String type,
+            String featureType, String prerequisites, String benefit, String normal, String special) {
+        super(null, name, resume, description, book, page, type);
         this.featureType = featureType;
         this.prerequisites = prerequisites;
         this.benefit = benefit;

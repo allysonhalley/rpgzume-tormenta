@@ -25,12 +25,12 @@ public class RacialTraitsService {
 
     private RacialTraitsDTO convertToDTO(RacialTraits racialTraits) {
         return new RacialTraitsDTO(
-                racialTraits.getCard().getId(),
-                racialTraits.getCard().getName(),
-                racialTraits.getCard().getDescription(),
-                racialTraits.getCard().getBook(),
-                racialTraits.getCard().getPage(),
-                racialTraits.getCard().getType(),
+                racialTraits.getId(),
+                racialTraits.getName(),
+                racialTraits.getDescription(),
+                racialTraits.getBook(),
+                racialTraits.getPage(),
+                racialTraits.getType(),
                 racialTraits.getTraits());
     }
 }

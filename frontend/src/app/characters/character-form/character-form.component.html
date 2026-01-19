@@ -27,10 +27,9 @@
                         <mat-label>Classe Principal</mat-label>
                         <mat-select [(ngModel)]="character.classId" name="classId" required>
                             <mat-option *ngFor="let clazz of classes" [value]="clazz.id">
-                                {{ clazz.resume }} ({{ clazz.name }})
+                                {{ clazz.name }}
                             </mat-option>
                         </mat-select>
-                        <mat-hint>Selecione a Habilidade Inicial/Classe</mat-hint>
                     </mat-form-field>
                 </div>
 

@@ -1,6 +1,6 @@
 package com.hefti.rpgzume.dto;
 
-public record ClassAbilitiesDTO(
+public record ClassAbilityDTO(
                 String id,
                 String name,
                 String resume, // Added resume field
@@ -8,5 +8,6 @@ public record ClassAbilitiesDTO(
                 String book,
                 Integer page,
                 String type,
-                String abilities) {
+                String playerClassId,
+                String playerClassName) {
 }

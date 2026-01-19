@@ -9,16 +9,8 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
-public class Magic {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true) // Cascata e remoção de órfãos
-    @JoinColumn(name = "card_id", referencedColumnName = "id")
-    private Card card; // Relacionamento com outra entidade chamada "Card"
+@EqualsAndHashCode(callSuper = true)
+public class Magic extends Card {
 
     @Column(name = "magic_type")
     private String magicType;
@@ -33,11 +25,11 @@ public class Magic {
     private String school;
     private String effect;
 
-    public Magic(Card card, String magicType, String school, String level, String components, String castTime,
-            String range,
-            String targetArea, String duration, String savingThrow, String spellResistance, String effect) {
-        this.card = card;
-        this.card.setType("magic");
+    public Magic(String name, String resume, String description, String book, Integer page, String type,
+            String magicType, String school, String level, String components, String castTime,
+            String range, String targetArea, String duration, String savingThrow, String spellResistance,
+            String effect) {
+        super(null, name, resume, description, book, page, type);
         this.magicType = magicType;
         this.school = school;
         this.level = level;

@@ -71,8 +71,14 @@ public class CardController {
     }
 
     private CardDTO convertToDTO(Card card) {
-        String featureType = card.getFeature() != null ? card.getFeature().getFeatureType() : null;
-        String school = card.getMagic() != null ? card.getMagic().getSchool() : null;
+        String featureType = null;
+        String school = null;
+
+        if (card instanceof com.hefti.rpgzume.model.Feature) {
+            featureType = ((com.hefti.rpgzume.model.Feature) card).getFeatureType();
+        } else if (card instanceof com.hefti.rpgzume.model.Magic) {
+            school = ((com.hefti.rpgzume.model.Magic) card).getSchool();
+        }
 
         return new CardDTO(
                 card.getId(),
