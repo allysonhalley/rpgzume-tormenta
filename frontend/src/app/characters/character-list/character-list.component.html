@@ -1,0 +1,31 @@
+<mat-toolbar color="primary">
+    <span>Meus Personagens</span>
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" routerLink="/characters/new">
+        <mat-icon>add</mat-icon> Novo Personagem
+    </button>
+</mat-toolbar>
+
+<div class="container">
+    <div class="card-grid" *ngIf="characters.length > 0; else noItems">
+        <mat-card *ngFor="let char of characters" class="character-card">
+            <mat-card-header>
+                <mat-card-title>{{ char.name }}</mat-card-title>
+                <mat-card-subtitle>{{ char.raceName }} - {{ char.className }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <p><strong>Talentos:</strong> {{ char.featureIds.length }}</p>
+                <p><strong>Magias:</strong> {{ char.magicIds.length }}</p>
+            </mat-card-content>
+            <mat-card-actions align="end">
+                <button mat-button color="warn" (click)="deleteCharacter(char.id!)">Excluir</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+
+    <ng-template #noItems>
+        <div class="empty-state">
+            <p>Nenhum personagem encontrado.</p>
+        </div>
+    </ng-template>
+</div>

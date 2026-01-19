@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +21,6 @@ export class AuthService {
         if (isPlatformBrowser(this.platformId)) {
             const token = localStorage.getItem(this.tokenKey);
             if (token) {
-                // decoding token to get user info could be done here
                 this.currentUserSubject.next({ token });
             }
         }
@@ -58,5 +58,17 @@ export class AuthService {
 
     isAuthenticated(): boolean {
         return !!this.getToken();
+    }
+
+    getUserId(): number | null {
+        const token = this.getToken();
+        if (!token) return null;
+        try {
+            const decoded: any = jwtDecode(token);
+            return decoded.id || null;
+        } catch (e) {
+            console.error('Error decoding token', e);
+            return null;
+        }
     }
 }

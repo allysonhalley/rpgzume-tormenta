@@ -1,0 +1,24 @@
+.container {
+    padding: 20px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.character-card {
+    height: 100%;
+}
+
+.empty-state {
+    text-align: center;
+    margin-top: 50px;
+    color: #666;
+}

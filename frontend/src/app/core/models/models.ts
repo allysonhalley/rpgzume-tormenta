@@ -63,3 +63,15 @@ export interface ClassAbilities {
   page: number;
   abilities: string;
 }
+
+export interface Character {
+  id?: string;
+  userId: number; // Use number for Long
+  name: string;
+  raceId: string;
+  raceName?: string;
+  classId: string;
+  className?: string;
+  featureIds: string[];
+  magicIds: string[];
+}

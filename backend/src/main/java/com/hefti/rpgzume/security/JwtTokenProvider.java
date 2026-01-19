@@ -18,14 +18,23 @@ public class JwtTokenProvider {
     @Value("${app.jwtExpirationMs:86400000}")
     private int jwtExpirationMs;
 
+    @org.springframework.beans.factory.annotation.Autowired
+    private com.hefti.rpgzume.user.UserRepository userRepository;
+
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
+
+        // Fetch user to get ID
+        com.hefti.rpgzume.user.User user = userRepository.findByEmail(username).orElse(null);
+        Long userId = (user != null) ? user.getId() : null;
+
         return Jwts.builder()
                 .setSubject(username)
+                .claim("id", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
@@ -33,8 +42,13 @@ public class JwtTokenProvider {
     }
 
     public String generateTokenFromEmail(String email) {
+        // Fetch user to get ID
+        com.hefti.rpgzume.user.User user = userRepository.findByEmail(email).orElse(null);
+        Long userId = (user != null) ? user.getId() : null;
+
         return Jwts.builder()
                 .setSubject(email)
+                .claim("id", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
