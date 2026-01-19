@@ -122,6 +122,7 @@ def parse_with_gemini(text, mode="magic"):
         Return a JSON object with a key "class_abilities" containing a list of objects.
         
         Each object MUST have these fields:
+        - class_name: string (The name of the Character Class this ability belongs to, e.g. "Bárbaro", "Bardo", "Clérigo". Infer from page headers or context if not explicit next to the ability)
         - name: string (The name of the class ability, found in bold before the ":")
         - description: string (The text immediately following the ":" after the name)
         - abilities: string (A list of abilities provided by this class feature. Return as a single string with items separated by newlines or semicolons)
@@ -135,70 +136,89 @@ def parse_with_gemini(text, mode="magic"):
         Text to parse:
         """
 
-    try:
-        # Debug: list models
-        # for m in genai.list_models():
-        #     if 'generateContent' in m.supported_generation_methods:
-        #         print(m.name)
-
-        # Dynamic Model Selection
-        available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
-        print(f"Available models: {available_models}")
-        
-        chosen_model_name = None
-        # Preference: Flash > Pro > Any
-        for m in available_models:
-            if 'flash' in m.lower():
-                chosen_model_name = m
-                break
-        if not chosen_model_name:
+    max_retries = 5
+    for attempt in range(max_retries):
+        try:
+            # Debug: list models
+            # for m in genai.list_models():
+            #     if 'generateContent' in m.supported_generation_methods:
+            #         print(m.name)
+    
+            # Dynamic Model Selection
+            available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+            print(f"Available models: {available_models}")
+            
+            chosen_model_name = None
+            # Preference: Flash > Pro > Any
             for m in available_models:
-                if 'pro' in m.lower():
+                if 'flash' in m.lower():
                     chosen_model_name = m
                     break
-        if not chosen_model_name and available_models:
-            chosen_model_name = available_models[0]
+            if not chosen_model_name:
+                for m in available_models:
+                    if 'pro' in m.lower():
+                        chosen_model_name = m
+                        break
+            if not chosen_model_name and available_models:
+                chosen_model_name = available_models[0]
+                
+            if not chosen_model_name:
+                print("No suitable Gemini model found.")
+                return []
+    
+            print(f"Sending request to Gemini ({len(text)} chars)... using {chosen_model_name}")
+            model = genai.GenerativeModel(chosen_model_name) 
+    
+            response = model.generate_content(prompt + text, generation_config={"response_mime_type": "application/json"})
             
-        if not chosen_model_name:
-            print("No suitable Gemini model found.")
-            return []
-
-        print(f"Sending request to Gemini ({len(text)} chars)... using {chosen_model_name}")
-        model = genai.GenerativeModel(chosen_model_name) 
-
-        response = model.generate_content(prompt + text, generation_config={"response_mime_type": "application/json"})
-        
-        print(f"AI Response preview: {response.text[:200]}...")
-
-        # Clean markdown code blocks if present
-        cleaned_text = response.text.strip()
-        if cleaned_text.startswith("```json"):
-            cleaned_text = cleaned_text[7:]
-        if cleaned_text.startswith("```"):
-            cleaned_text = cleaned_text[3:]
-        if cleaned_text.endswith("```"):
-            cleaned_text = cleaned_text[:-3]
-        cleaned_text = cleaned_text.strip()
-
-        # Parse JSON
-        try:
-             result = json.loads(cleaned_text)
-             if mode == 'racial_traits':
-                 items = result.get('racial_traits', [])
-             elif mode == 'class_abilities':
-                 items = result.get('class_abilities', [])
-             else:
-                 items = result.get(mode + "s", [])
-             print(f"Parsed {len(items)} items from JSON.")
-             return items
-        except json.JSONDecodeError:
-            print("Failed to decode JSON from AI response. Raw text:")
-            print(response.text)
-            return []
-            
-    except Exception as e:
-        print(f"AI Error: {e}")
-        return []
+            # If successful, break retry loop and proceed
+            print(f"AI Response preview: {response.text[:200]}...")
+    
+            # Clean markdown code blocks if present
+            cleaned_text = response.text.strip()
+            if cleaned_text.startswith("```json"):
+                cleaned_text = cleaned_text[7:]
+            if cleaned_text.startswith("```"):
+                cleaned_text = cleaned_text[3:]
+            if cleaned_text.endswith("```"):
+                cleaned_text = cleaned_text[:-3]
+            cleaned_text = cleaned_text.strip()
+    
+            # Parse JSON
+            try:
+                 result = json.loads(cleaned_text)
+                 if mode == 'racial_traits':
+                     items = result.get('racial_traits', [])
+                 elif mode == 'class_abilities':
+                     items = result.get('class_abilities', [])
+                 else:
+                     items = result.get(mode + "s", [])
+                 print(f"Parsed {len(items)} items from JSON.")
+                 return items
+            except json.JSONDecodeError:
+                print("Failed to decode JSON from AI response. Raw text:")
+                print(response.text)
+                return []
+                
+        except Exception as e:
+            error_msg = str(e)
+            if "429" in error_msg or "quota" in error_msg.lower():
+                wait_time = 60
+                
+                # Try to parse logic from error if possible, but 60s is safe default for this tier
+                import re
+                match = re.search(r'retry_delay\s*{\s*seconds:\s*(\d+)', error_msg)
+                if match:
+                    wait_time = int(match.group(1)) + 5 # Add buffer
+                
+                print(f"Quota exceeded (429). Retrying in {wait_time} seconds... (Attempt {attempt+1}/{max_retries})")
+                time.sleep(wait_time)
+                continue # Retry
+            else:
+                print(f"AI Error: {e}")
+                return []
+    
+    return []
 
 def insert_magics(magics):
     conn = get_db_connection()
@@ -338,15 +358,16 @@ def insert_class_abilities(items):
     for r in items:
         try:
             # Create Card
-            name = r.get('name', 'Unknown')
+            # User Request: name = Class Name (e.g. Bárbaro), resume = Ability Name (e.g. Fúria)
+            class_name = r.get('class_name', 'Classe Desconhecida')
+            ability_name = r.get('name', 'Habilidade Desconhecida')
             desc = r.get('description', '')
-            resume = "" # Null/Empty as requested
             
             cur.execute("""
                 INSERT INTO card (type, name, resume, description, book, page)
                 VALUES (%s, %s, %s, %s, %s, %s)
                 RETURNING id;
-            """, ('class_abilities', name, resume, desc, 'Tormenta RPG', 0))
+            """, ('class_abilities', class_name, ability_name, desc, 'Tormenta RPG', 0))
             card_id = cur.fetchone()[0]
             
             # Create ClassAbilities

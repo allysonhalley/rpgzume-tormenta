@@ -18,6 +18,8 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class ClassAbilitiesListComponent implements OnInit {
     classAbilities: ClassAbilities[] = [];
+    groupedAbilities: { [className: string]: ClassAbilities[] } = {};
+    classNames: string[] = [];
 
     constructor(private classAbilitiesService: ClassAbilitiesService) { }
 
@@ -25,11 +27,26 @@ export class ClassAbilitiesListComponent implements OnInit {
         this.classAbilitiesService.getAllClassAbilities().subscribe({
             next: (data) => {
                 this.classAbilities = data;
+                this.groupAbilities();
             },
             error: (error) => {
                 console.error('Erro ao buscar Habilidades de Classe:', error);
             }
         });
+    }
+
+    groupAbilities(): void {
+        this.groupedAbilities = this.classAbilities.reduce((acc, current) => {
+            // card.name now holds the Class Name (e.g. Bárbaro)
+            const className = current.name || 'Outros';
+            if (!acc[className]) {
+                acc[className] = [];
+            }
+            acc[className].push(current);
+            return acc;
+        }, {} as { [key: string]: ClassAbilities[] });
+
+        this.classNames = Object.keys(this.groupedAbilities).sort();
     }
 
     getAbilitiesList(abilities: string): string[] {

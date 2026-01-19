@@ -56,7 +56,8 @@ export interface RacialTraits {
 
 export interface ClassAbilities {
   id?: string;
-  name: string;
+  name: string; // Class Name
+  resume: string; // Ability Name
   description: string;
   book: string;
   page: number;

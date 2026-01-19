@@ -27,6 +27,7 @@ public class ClassAbilitiesService {
         return new ClassAbilitiesDTO(
                 classAbilities.getCard().getId(),
                 classAbilities.getCard().getName(),
+                classAbilities.getCard().getResume(), // Map resume
                 classAbilities.getCard().getDescription(),
                 classAbilities.getCard().getBook(),
                 classAbilities.getCard().getPage(),
