@@ -94,7 +94,7 @@ def parse_with_gemini(text, mode="magic"):
 
         Text to parse:
         """
-    else: # features
+    elif mode == "feature":
         prompt = """
         You are an expert RPG parser. Extract all Feats (Talentos) from the following text.
         Return a JSON object with a key "features" containing a list of objects.
@@ -112,6 +112,24 @@ def parse_with_gemini(text, mode="magic"):
         Structure:
         {
           "features": [ ... ]
+        }
+
+        Text to parse:
+        """
+    elif mode == "class_abilities":
+        prompt = """
+        You are an expert RPG parser. Extract all Class Abilities (Habilidades de Classe) from the following text.
+        Return a JSON object with a key "class_abilities" containing a list of objects.
+        
+        Each object MUST have these fields:
+        - name: string (The name of the class ability, found in bold before the ":")
+        - description: string (The text immediately following the ":" after the name)
+        - abilities: string (A list of abilities provided by this class feature. Return as a single string with items separated by newlines or semicolons)
+        
+        Ignore headers, footers.
+        Structure:
+        {
+          "class_abilities": [ ... ]
         }
 
         Text to parse:
@@ -167,6 +185,8 @@ def parse_with_gemini(text, mode="magic"):
              result = json.loads(cleaned_text)
              if mode == 'racial_traits':
                  items = result.get('racial_traits', [])
+             elif mode == 'class_abilities':
+                 items = result.get('class_abilities', [])
              else:
                  items = result.get(mode + "s", [])
              print(f"Parsed {len(items)} items from JSON.")
@@ -205,7 +225,7 @@ def insert_magics(magics):
             # Create Magic
             cur.execute("""
                 INSERT INTO magic (
-                    card_id, type, school, level, components, cast_time, range, 
+                    card_id, magic_type, school, level, components, cast_time, range, 
                     target_area, duration, saving_throw, spell_resistance, effect
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (
@@ -303,13 +323,52 @@ def insert_racial_traits(items):
             print(f"Error inserting race {r.get('name')}: {e}")
             
     print(f"Inserted {count} races.")
+    print(f"Inserted {count} races.")
+    cur.close()
+    conn.close()
+
+def insert_class_abilities(items):
+    conn = get_db_connection()
+    if not conn: return
+    
+    cur = conn.cursor()
+    count = 0
+    print(f"Inserting {len(items)} class abilities...")
+    
+    for r in items:
+        try:
+            # Create Card
+            name = r.get('name', 'Unknown')
+            desc = r.get('description', '')
+            resume = "" # Null/Empty as requested
+            
+            cur.execute("""
+                INSERT INTO card (type, name, resume, description, book, page)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                RETURNING id;
+            """, ('class_abilities', name, resume, desc, 'Tormenta RPG', 0))
+            card_id = cur.fetchone()[0]
+            
+            # Create ClassAbilities
+            cur.execute("""
+                INSERT INTO class_abilities (card_id, abilities)
+                VALUES (%s, %s);
+            """, (card_id, r.get('abilities', '')))
+            
+            conn.commit()
+            count += 1
+        except Exception as e:
+            conn.rollback()
+            print(f"Error inserting class ability {r.get('name')}: {e}")
+            
+    print(f"Inserted {count} class abilities.")
     cur.close()
     conn.close()
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("pdf_path")
-    parser.add_argument("--mode", choices=['magic', 'feature', 'racial_traits'], required=True)
+    parser.add_argument("--mode", choices=['magic', 'feature', 'racial_traits', 'class_abilities'], required=True)
     parser.add_argument("--start", type=int, required=True)
     parser.add_argument("--end", type=int, required=True)
     parser.add_argument("--chunk_size", type=int, default=10, help="Pages per AI request")
@@ -342,6 +401,8 @@ def main():
                 insert_magics(data)
             elif args.mode == 'feature':
                 insert_features(data)
+            elif args.mode == 'class_abilities':
+                insert_class_abilities(data)
             else:
                 insert_racial_traits(data)
         else:

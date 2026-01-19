@@ -53,3 +53,12 @@ export interface RacialTraits {
   page: number;
   traits: string;
 }
+
+export interface ClassAbilities {
+  id?: string;
+  name: string;
+  description: string;
+  book: string;
+  page: number;
+  abilities: string;
+}

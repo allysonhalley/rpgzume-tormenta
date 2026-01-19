@@ -13,15 +13,15 @@ def fix_encoding(input_file, output_file):
         fixed_count = 0
         
         for line in lines:
-            if "COPY public.racial_traits" in line:
-                print(f"Found racial_traits block at line: {line.strip()}")
+            if "COPY public.racial_traits" in line or "COPY public.card" in line or "COPY public.magic" in line or "COPY public.feature" in line:
+                print(f"Found block to fix at line: {line.strip()}")
                 inside_racial_traits = True
                 f.write(line)
                 continue
             
             if inside_racial_traits:
                 if line.strip() == r"\.":
-                    print("End of racial_traits block.")
+                    print("End of block.")
                     inside_racial_traits = False
                     f.write(line)
                 else:

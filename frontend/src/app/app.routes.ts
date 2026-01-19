@@ -14,7 +14,8 @@ export const appRoutes: Routes = [
       { path: 'cards', loadChildren: () => import('./cards/cards.module').then(m => m.CardsModule) },
       { path: 'features', loadChildren: () => import('./features/features.module').then(m => m.FeaturesModule) },
       { path: 'magics', loadChildren: () => import('./magics/magics.module').then(m => m.MagicsModule) },
-      { path: 'racial-traits', loadChildren: () => import('./racial-traits/racial-traits.module').then(m => m.RacialTraitsModule) }
+      { path: 'racial-traits', loadChildren: () => import('./racial-traits/racial-traits.module').then(m => m.RacialTraitsModule) },
+      { path: 'class-abilities', loadChildren: () => import('./class-abilities/class-abilities.module').then(m => m.ClassAbilitiesModule) }
     ]
   },
   { path: '**', redirectTo: '' } // Página não encontrada

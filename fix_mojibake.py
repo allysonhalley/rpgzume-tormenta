@@ -46,7 +46,7 @@ def fix_mojibake(input_file, output_file):
         fixed_count = 0
         
         for line in lines:
-            if "COPY public.racial_traits" in line or "COPY public.card" in line:
+            if "COPY public.racial_traits" in line or "COPY public.card" in line or "COPY public.magic" in line or "COPY public.feature" in line or "COPY public.class_abilities" in line:
                 inside_racial_traits = True
                 f.write(line)
                 continue
