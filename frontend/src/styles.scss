@@ -1,1 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* FIX: Floating Label Overlap */
+/* Ensures the label has a background color to hide the border behind it */
+.mdc-text-field--outlined .mdc-floating-label {
+    background-color: white; 
+    padding: 0 4px; 
+}
+
+/* Ensure form fields take full width where specified */
+.full-width {
+    width: 100%;
+}
