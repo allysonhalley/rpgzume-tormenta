@@ -25,7 +25,7 @@
 
                     <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Classe Principal</mat-label>
-                        <mat-select [(ngModel)]="character.classId" name="classId" required>
+                        <mat-select [(ngModel)]="character.principalClassId" name="principalClassId" required>
                             <mat-option *ngFor="let clazz of classes" [value]="clazz.id">
                                 {{ clazz.name }}
                             </mat-option>
@@ -38,7 +38,7 @@
                         <mat-label>Talentos (Features)</mat-label>
                         <mat-select [(ngModel)]="character.featureIds" name="featureIds" multiple>
                             <mat-option *ngFor="let feature of features" [value]="feature.id">
-                                {{ feature.resume }} - {{ feature.name }}
+                                {{ feature.name }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>

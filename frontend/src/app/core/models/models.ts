@@ -62,6 +62,7 @@ export interface ClassAbility {
   book: string;
   page: number;
   abilities: string;
+  playerClassName?: string;
 }
 
 export interface PlayerClass {
@@ -81,8 +82,8 @@ export interface Character {
   name: string;
   raceId: string;
   raceName?: string;
-  classId: string;
-  className?: string;
+  principalClassId: string;
+  principalClassName?: string;
   featureIds: string[];
   magicIds: string[];
 }

@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -42,7 +41,7 @@ export class CharacterFormComponent implements OnInit {
         userId: 0, // Placeholder, set in ngOnInit
         name: '',
         raceId: '',
-        classId: '',
+        principalClassId: '',
         featureIds: [],
         magicIds: []
     };

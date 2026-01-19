@@ -12,7 +12,7 @@
                     <mat-card class="card" *ngFor="let ability of groupedAbilities[className]" appearance="outlined">
                         <mat-card-header base="elevated-container-shape">
                             <!-- resume holds the Ability Name (e.g. Fúria) -->
-                            <mat-card-title>{{ ability.resume }}</mat-card-title>
+                            <mat-card-title>{{ ability.name }}</mat-card-title>
                             <mat-card-subtitle>{{ ability.book }} - Pág. {{ ability.page }}</mat-card-subtitle>
                         </mat-card-header>
                         <mat-card-content>

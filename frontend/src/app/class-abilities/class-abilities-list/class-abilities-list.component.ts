@@ -39,8 +39,8 @@ export class ClassAbilitiesListComponent implements OnInit {
 
     groupAbilities(): void {
         this.groupedAbilities = this.classAbilities.reduce((acc, current) => {
-            // card.name now holds the Class Name (e.g. Bárbaro)
-            const className = current.name || 'Outros';
+            // Use playerClassName provided by DTO, fallback to 'Outros'
+            const className = current.playerClassName || 'Outros';
             if (!acc[className]) {
                 acc[className] = [];
             }

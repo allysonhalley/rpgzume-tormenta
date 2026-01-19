@@ -11,7 +11,7 @@
         <mat-card *ngFor="let char of characters" class="character-card">
             <mat-card-header>
                 <mat-card-title>{{ char.name }}</mat-card-title>
-                <mat-card-subtitle>{{ char.raceName }} - {{ char.className }}</mat-card-subtitle>
+                <mat-card-subtitle>{{ char.raceName }} - {{ char.principalClassName }}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
                 <p><strong>Talentos:</strong> {{ char.featureIds.length }}</p>
