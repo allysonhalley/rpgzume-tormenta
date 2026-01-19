@@ -9,10 +9,12 @@ import { ClassAbilitiesService } from "../../core/services/class-abilities.servi
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
+import { MatTabsModule } from '@angular/material/tabs';
+
 @Component({
     selector: 'app-class-abilities-list',
     standalone: true,
-    imports: [CommonModule, MatToolbarModule, MatListModule, MatCardModule, MatDividerModule, MatIconModule, MatButtonModule],
+    imports: [CommonModule, MatToolbarModule, MatListModule, MatCardModule, MatDividerModule, MatIconModule, MatButtonModule, MatTabsModule],
     templateUrl: './class-abilities-list.component.html',
     styleUrls: ['../../shared/shared-list.component.scss']
 })
