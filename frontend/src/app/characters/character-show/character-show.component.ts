@@ -15,6 +15,8 @@ import { MagicService } from '../../core/services/magic.service';
 import { RacialTraitsService } from '../../core/services/racial-traits.service';
 import { ClassAbilityService } from '../../core/services/class-ability.service';
 import { PlayerClassService } from '../../core/services/player-class.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
     selector: 'app-character-show',
@@ -257,6 +259,243 @@ export class CharacterShowComponent implements OnInit {
                 levels: sortedLevels
             };
         });
+    }
+
+    generatePDF(): void {
+        const doc = new jsPDF();
+        let y = 20;
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const margin = 14;
+        const contentWidth = pageWidth - (margin * 2);
+
+        // Indentation levels
+        const indentItem = margin + 5;
+        const indentDesc = margin + 10;
+        const indentSubItem = margin + 15;
+
+        if (!this.character) return;
+
+        // --- Helper Functions ---
+        const checkPageBreak = (height: number) => {
+            if (y + height > pageHeight - margin) {
+                doc.addPage();
+                y = 20;
+            }
+        };
+
+        const drawSectionHeader = (title: string) => {
+            checkPageBreak(15);
+            y += 5;
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text(title, margin, y);
+            y += 2;
+            doc.setLineWidth(0.5);
+            doc.line(margin, y, pageWidth - margin, y);
+            y += 8;
+        };
+
+        const drawItemTitle = (title: string) => {
+            checkPageBreak(10);
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text(title, indentItem, y);
+            y += 6;
+        };
+
+        const drawDescription = (text: string, indent: number = indentDesc, isItalic: boolean = false) => {
+            if (!text) return;
+            doc.setFontSize(10);
+            doc.setFont('helvetica', isItalic ? 'italic' : 'normal');
+            const cleanText = text.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' '); // Basic HTML cleanup
+
+            const availableWidth = pageWidth - indent - margin;
+            const splitText = doc.splitTextToSize(cleanText, availableWidth);
+
+            checkPageBreak(splitText.length * 5);
+            doc.text(cleanText, indent, y, { maxWidth: availableWidth, align: 'justify' });
+            y += (splitText.length * 5) + 2;
+        };
+
+        // --- DOCUMENT START ---
+
+        // HEADER
+        doc.setFontSize(24);
+        doc.setFont('helvetica', 'bold');
+        doc.text(this.character.name, margin, y);
+        y += 10;
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${this.character.raceName || ''} - ${this.character.principalClassName || ''}`, margin, y);
+        y += 10;
+        doc.setLineWidth(1);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 10;
+
+        // SECTION: RAÇA
+        drawSectionHeader(`Raça: ${this.race?.name || this.character.raceName}`);
+
+        if (this.raceTraitsList.length > 0) {
+            this.raceTraitsList.forEach(trait => {
+                const bullet = '•';
+                doc.setFont('helvetica', 'bold');
+                doc.text(bullet, indentItem, y);
+                // Indent text after bullet
+                doc.setFont('helvetica', 'normal');
+                // Calculate width for text to avoid bullet overlap
+                const textWidth = pageWidth - indentDesc - margin;
+                const splitText = doc.splitTextToSize(trait, textWidth);
+
+                checkPageBreak(splitText.length * 5);
+                doc.text(trait, indentDesc, y, { maxWidth: textWidth, align: 'justify' });
+                y += (splitText.length * 5) + 3;
+            });
+        }
+        y += 5;
+
+        // SECTION: CLASSES
+        this.classes.forEach(cls => {
+            drawSectionHeader(`Classe: ${cls.name}`);
+
+            const abilities = this.classAbilitiesByClass[cls.id || ''] || [];
+            if (abilities.length === 0) {
+                drawDescription('Nenhuma habilidade encontrada.', indentItem, true);
+            } else {
+                abilities.forEach(ability => {
+                    drawItemTitle(ability.name);
+
+                    // 1. Description
+                    if (ability.description) {
+                        // Check if ability description should be list-formatted (like Bard Song)
+                        const listParts = this.formatTextToList(ability.description);
+                        if (listParts.length > 1) {
+                            listParts.forEach(part => {
+                                const parsed = this.parseAbilityLine(part);
+                                if (parsed.label) {
+                                    // Bold Label: Description
+                                    const labelText = `${parsed.label}:`;
+
+                                    checkPageBreak(10);
+                                    doc.setFont('helvetica', 'bold');
+                                    doc.setFontSize(10);
+                                    doc.text(labelText, indentDesc, y);
+
+                                    const labelWidth = doc.getTextWidth(labelText);
+                                    const contentIndent = indentDesc + labelWidth + 2;
+                                    const remainingWidth = pageWidth - contentIndent - margin;
+
+                                    const splitDesc = doc.splitTextToSize(parsed.text, remainingWidth);
+                                    doc.setFont('helvetica', 'normal');
+                                    doc.text(parsed.text, contentIndent, y, { maxWidth: remainingWidth, align: 'justify' });
+                                    y += (splitDesc.length * 5) + 3;
+
+                                } else {
+                                    drawDescription(part, indentDesc);
+                                }
+                            });
+                        } else {
+                            drawDescription(ability.description, indentDesc);
+                        }
+                    }
+
+                    // 2. Sub-Abilities List (if any exists strictly as list)
+                    if (ability.abilities) {
+                        const abs = this.formatTextToList(ability.abilities);
+                        abs.forEach(ab => {
+                            doc.setFontSize(10); // Reset size
+                            doc.text('-', indentDesc, y);
+                            const splitAb = doc.splitTextToSize(ab, pageWidth - indentSubItem - margin);
+                            checkPageBreak(splitAb.length * 5);
+                            doc.text(splitAb, indentSubItem, y);
+                            y += (splitAb.length * 5) + 2;
+                        });
+                    }
+                    y += 4; // Space between abilities
+                });
+            }
+        });
+
+        // SECTION: TALENTOS
+        drawSectionHeader('Talentos');
+
+        if (this.features.length === 0) {
+            drawDescription('Nenhum talento selecionado.', indentItem, true);
+        } else {
+            this.features.forEach(feat => {
+                drawItemTitle(`${feat.name} (${feat.featureType || 'Geral'})`);
+
+                const drawField = (label: string, value: string) => {
+                    if (!value) return;
+                    const labelText = `${label}: `;
+
+                    checkPageBreak(10);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(10);
+                    doc.text(labelText, indentDesc, y);
+
+                    const labelWidth = doc.getTextWidth(labelText);
+                    // If label + text fits, inline it. If long text, maybe wrap.
+                    // Simple implementation: Text starts after label
+                    const contentIndent = indentDesc + labelWidth + 1;
+                    const maxWidth = pageWidth - contentIndent - margin;
+
+                    const splitVal = doc.splitTextToSize(value, maxWidth);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text(value, contentIndent, y, { maxWidth: maxWidth, align: 'justify' });
+                    y += (splitVal.length * 5) + 2;
+                };
+
+                drawField('Descrição', feat.description);
+                drawField('Benefício', feat.benefit);
+                drawField('Pré-requisitos', feat.prerequisites);
+
+                y += 4;
+            });
+        }
+
+        // SECTION: MAGIAS
+        if (this.magics.length > 0) {
+            drawSectionHeader('Magias');
+
+            this.groupedMagics.forEach(group => {
+                checkPageBreak(10);
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'bolditalic');
+                doc.text(group.type, indentItem, y);
+                y += 6;
+
+                group.levels.forEach((levelGroup: any) => {
+                    checkPageBreak(10);
+                    doc.setFontSize(11);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(80); // gray
+                    doc.text(`Nível ${levelGroup.level}`, indentItem, y);
+                    doc.setTextColor(0);
+                    y += 6;
+
+                    levelGroup.magics.forEach((magic: any) => {
+                        checkPageBreak(15);
+                        doc.setFontSize(11);
+                        doc.setFont('helvetica', 'bold');
+                        // Bullet for magic?
+                        doc.text(`• ${magic.name}`, indentDesc, y);
+                        y += 5;
+
+                        // Short description indented further
+                        const desc = magic.description || magic.resume || '';
+                        if (desc) {
+                            drawDescription(desc, indentSubItem);
+                        }
+                        y += 3;
+                    });
+                    y += 3;
+                });
+                y += 4;
+            });
+        }
+
+        doc.save(`${this.character.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`);
     }
 
     back(): void {

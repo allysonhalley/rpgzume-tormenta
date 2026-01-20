@@ -3,6 +3,10 @@
         <mat-icon>arrow_back</mat-icon>
     </button>
     <span>Detalhes do Personagem</span>
+    <span style="flex: 1 1 auto;"></span>
+    <button mat-icon-button (click)="generatePDF()" title="Gerar PDF">
+        <mat-icon>picture_as_pdf</mat-icon>
+    </button>
 </mat-toolbar>
 
 <div class="container" *ngIf="character; else loadingTpl">
