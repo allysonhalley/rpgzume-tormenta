@@ -54,6 +54,7 @@ export interface RacialTraits {
   traits: string;
 }
 
+
 export interface ClassAbility {
   id?: string;
   name: string; // Class Name
@@ -63,6 +64,7 @@ export interface ClassAbility {
   page: number;
   abilities: string;
   playerClassName?: string;
+  playerClassId?: string;
 }
 
 export interface PlayerClass {
@@ -84,6 +86,7 @@ export interface Character {
   raceName?: string;
   principalClassId: string;
   principalClassName?: string;
+  additionalClassIds?: string[];
   featureIds: string[];
   magicIds: string[];
 }

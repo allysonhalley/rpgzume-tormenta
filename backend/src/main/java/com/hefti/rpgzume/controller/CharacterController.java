@@ -43,6 +43,11 @@ public class CharacterController {
         return ResponseEntity.status(HttpStatus.CREATED).body(characterService.createCharacter(dto));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<CharacterDTO> updateCharacter(@PathVariable String id, @RequestBody CharacterDTO dto) {
+        return ResponseEntity.ok(characterService.updateCharacter(id, dto));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCharacter(@PathVariable String id) {
         characterService.deleteCharacter(id);

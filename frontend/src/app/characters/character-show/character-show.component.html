@@ -15,32 +15,207 @@
             <mat-card-subtitle>{{ character.raceName }} - {{ character.principalClassName }}</mat-card-subtitle>
         </mat-card-header>
 
-        <mat-divider></mat-divider>
-
         <mat-card-content>
-            <div class="section">
-                <h3>Talentos e Habilidades</h3>
-                <mat-list>
-                    <mat-list-item *ngFor="let feature of features">
-                        <h4 matListItemTitle>{{ feature.name }}</h4>
-                        <p matListItemLine>{{ feature.resume || feature.description }}</p>
-                    </mat-list-item>
-                    <mat-list-item *ngIf="features.length === 0">Nenhum talento selecionado.</mat-list-item>
-                </mat-list>
-            </div>
+            <mat-tab-group dynamicHeight>
+                <!-- ABA RAÇA -->
+                <mat-tab label="{{ race?.name || character.raceName }}">
+                    <div class="tab-content">
+                        <div class="traits-section" *ngIf="raceTraitsList.length > 0">
+                            <ul>
+                                <li *ngFor="let trait of raceTraitsList">{{ trait }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </mat-tab>
 
-            <mat-divider></mat-divider>
+                <!-- ABAS DE CLASSE -->
+                <mat-tab *ngFor="let cls of classes" [label]="cls.name">
+                    <div class="tab-content">
+                        <h3 class="class-header">Habilidades de {{ cls.name }}</h3>
+                        <div class="card-grid">
+                            <mat-card class="class-ability-card" *ngFor="let ability of classAbilitiesByClass[cls.id]"
+                                appearance="outlined">
+                                <mat-card-header>
+                                    <mat-card-title>{{ ability.name }}</mat-card-title>
+                                    <mat-card-subtitle *ngIf="ability.book">
+                                        {{ ability.book }} <span *ngIf="ability.page">- Pág. {{ ability.page }}</span>
+                                    </mat-card-subtitle>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <mat-divider></mat-divider>
+                                    <div class="ability-description">
+                                        <div class="full-text">
+                                            <!-- Check if we have a list-like description -->
+                                            <ng-container
+                                                *ngIf="formatTextToList(ability.description).length > 1; else simpleDesc">
+                                                <ul class="clean-list">
+                                                    <li *ngFor="let part of formatTextToList(ability.description)">
+                                                        <ng-container *ngIf="parseAbilityLine(part) as parsed">
+                                                            <strong *ngIf="parsed.label">{{ parsed.label }}:</strong> {{
+                                                            parsed.text }}
+                                                        </ng-container>
+                                                    </li>
+                                                </ul>
+                                            </ng-container>
+                                            <ng-template #simpleDesc>
+                                                <p *ngIf="ability.description"><strong>Descrição: </strong> {{
+                                                    ability.description }}</p>
+                                                <p *ngIf="!ability.description" class="empty-desc"><em>Sem descrição
+                                                        cadastrada.</em></p>
+                                            </ng-template>
+                                        </div>
+                                    </div>
 
-            <div class="section">
-                <h3>Magias</h3>
-                <mat-list>
-                    <mat-list-item *ngFor="let magic of magics">
-                        <h4 matListItemTitle>{{ magic.name }} (Nível {{ magic.level }})</h4>
-                        <p matListItemLine>{{ magic.resume || magic.description }}</p>
-                    </mat-list-item>
-                    <mat-list-item *ngIf="magics.length === 0">Nenhuma magia selecionada.</mat-list-item>
-                </mat-list>
-            </div>
+                                    <!-- Added missing abilities section to match standard -->
+                                    <div class="traits-section" *ngIf="ability.abilities">
+                                        <h4>Habilidades:</h4>
+                                        <ul>
+                                            <li *ngFor="let item of formatTextToList(ability.abilities)">{{ item }}</li>
+                                        </ul>
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+
+                            <div *ngIf="!classAbilitiesByClass[cls.id] || classAbilitiesByClass[cls.id].length === 0"
+                                class="empty-msg">
+                                Nenhuma habilidade encontrada para esta classe.
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- ABA TALENTOS (Agrupados) -->
+                <mat-tab label="Talentos">
+                    <div class="tab-content">
+                        <mat-tab-group dynamicHeight>
+                            <mat-tab *ngFor="let type of featureTypes" [label]="type">
+                                <div class="inner-tab-content">
+                                    <div class="card-grid">
+                                        <mat-card class="class-ability-card" *ngFor="let feat of featuresByType[type]"
+                                            appearance="outlined">
+                                            <mat-card-header>
+                                                <mat-card-title>{{ feat.name }}</mat-card-title>
+                                                <mat-card-subtitle>{{ feat.featureType }}</mat-card-subtitle>
+                                            </mat-card-header>
+                                            <mat-card-content>
+                                                <mat-divider></mat-divider>
+                                                <div class="ability-description">
+                                                    <p *ngIf="feat.description"><strong>Descrição: </strong>{{
+                                                        feat.description }}</p>
+                                                    <p *ngIf="feat.prerequisites"><strong>Pré-requisitos: </strong>{{
+                                                        feat.prerequisites }}</p>
+                                                    <p *ngIf="feat.benefit"><strong>Benefício: </strong>{{ feat.benefit
+                                                        }}</p>
+                                                    <p *ngIf="feat.normal"><strong>Normal: </strong>{{ feat.normal }}
+                                                    </p>
+                                                    <p *ngIf="feat.special"><strong>Especial: </strong>{{ feat.special
+                                                        }}</p>
+                                                </div>
+                                            </mat-card-content>
+                                            <mat-card-footer *ngIf="feat.book">
+                                                Livro: {{ feat.book }} <span *ngIf="feat.page">|| Página: {{ feat.page
+                                                    }}</span>
+                                            </mat-card-footer>
+                                        </mat-card>
+                                    </div>
+                                </div>
+                            </mat-tab>
+
+                            <mat-tab label="Todos" *ngIf="features.length > 0 && featureTypes.length > 1">
+                                <div class="inner-tab-content">
+                                    <div class="card-grid">
+                                        <mat-card class="class-ability-card" *ngFor="let feat of features"
+                                            appearance="outlined">
+                                            <mat-card-header>
+                                                <mat-card-title>{{ feat.name }}</mat-card-title>
+                                                <mat-card-subtitle>{{ feat.featureType }}</mat-card-subtitle>
+                                            </mat-card-header>
+                                            <mat-card-content>
+                                                <mat-divider></mat-divider>
+                                                <div class="ability-description">
+                                                    <p *ngIf="feat.description"><strong>Descrição: </strong>{{
+                                                        feat.description }}</p>
+                                                    <p *ngIf="feat.prerequisites"><strong>Pré-requisitos: </strong>{{
+                                                        feat.prerequisites }}</p>
+                                                    <p *ngIf="feat.benefit"><strong>Benefício: </strong>{{ feat.benefit
+                                                        }}</p>
+                                                    <p *ngIf="feat.normal"><strong>Normal: </strong>{{ feat.normal }}
+                                                    </p>
+                                                    <p *ngIf="feat.special"><strong>Especial: </strong>{{ feat.special
+                                                        }}</p>
+                                                </div>
+                                            </mat-card-content>
+                                            <mat-card-footer *ngIf="feat.book">
+                                                Livro: {{ feat.book }} <span *ngIf="feat.page">|| Página: {{ feat.page
+                                                    }}</span>
+                                            </mat-card-footer>
+                                        </mat-card>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+
+                        <div *ngIf="features.length === 0" class="empty-msg">
+                            Nenhum talento selecionado.
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- ABA MAGIAS -->
+                <mat-tab label="Magias" *ngIf="magics.length > 0">
+                    <div class="tab-content">
+                        <mat-tab-group dynamicHeight>
+                            <mat-tab *ngFor="let group of groupedMagics" [label]="group.type">
+                                <div class="inner-tab-content">
+                                    <mat-tab-group>
+                                        <mat-tab *ngFor="let levelGroup of group.levels"
+                                            [label]="'Nível ' + levelGroup.level">
+                                            <div class="card-grid">
+                                                <mat-card class="class-ability-card"
+                                                    *ngFor="let magic of levelGroup.magics" appearance="outlined">
+                                                    <mat-card-header>
+                                                        <mat-card-title>{{ magic.name }}</mat-card-title>
+                                                        <mat-card-subtitle>{{ magic.magicType }} - {{ magic.school }}
+                                                            (Nível {{ magic.level }})</mat-card-subtitle>
+                                                    </mat-card-header>
+                                                    <mat-card-content>
+                                                        <mat-divider></mat-divider>
+                                                        <div class="ability-description">
+                                                            <p *ngIf="magic.components"><strong>Componentes: </strong>{{
+                                                                magic.components }}</p>
+                                                            <p *ngIf="magic.castTime"><strong>Tempo de Conjuração:
+                                                                </strong>{{ magic.castTime }}</p>
+                                                            <p *ngIf="magic.range"><strong>Alcance: </strong>{{
+                                                                magic.range }}</p>
+                                                            <p *ngIf="magic.targetArea"><strong>Área do Alvo:
+                                                                </strong>{{ magic.targetArea }}</p>
+                                                            <p *ngIf="magic.duration"><strong>Duração: </strong>{{
+                                                                magic.duration }}</p>
+                                                            <p *ngIf="magic.savingThrow"><strong>Teste de Resistência:
+                                                                </strong>{{ magic.savingThrow }}</p>
+                                                            <p *ngIf="magic.spellResistance"><strong>Resistência à
+                                                                    Magia: </strong>{{ magic.spellResistance }}</p>
+                                                            <p *ngIf="magic.effect"><strong>Efeito: </strong>{{
+                                                                magic.effect }}</p>
+                                                            <p *ngIf="magic.description"><strong>Descrição: </strong>{{
+                                                                magic.description }}</p>
+                                                        </div>
+                                                    </mat-card-content>
+                                                    <mat-card-footer *ngIf="magic.book">
+                                                        Livro: {{ magic.book }} <span *ngIf="magic.page">|| Página: {{
+                                                            magic.page }}</span>
+                                                    </mat-card-footer>
+                                                </mat-card>
+                                            </div>
+                                        </mat-tab>
+                                    </mat-tab-group>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </mat-tab>
+
+            </mat-tab-group>
         </mat-card-content>
 
         <mat-card-actions>

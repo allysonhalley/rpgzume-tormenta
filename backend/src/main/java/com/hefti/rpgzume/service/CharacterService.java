@@ -103,6 +103,45 @@ public class CharacterService {
         characterRepository.deleteById(id);
     }
 
+    @Transactional
+    public CharacterDTO updateCharacter(String id, CharacterDTO dto) {
+        Character character = characterRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Personagem não encontrado"));
+
+        RacialTraits race = racialTraitsRepository.findById(dto.raceId())
+                .orElseThrow(() -> new RuntimeException("Raça não encontrada"));
+
+        PlayerClass principalClass = playerClassRepository.findById(dto.principalClassId())
+                .orElseThrow(() -> new RuntimeException("Classe Principal não encontrada"));
+
+        character.setName(dto.name());
+        character.setRace(race);
+        character.setPrincipalClass(principalClass);
+
+        if (dto.additionalClassIds() != null) {
+            List<PlayerClass> additionalClasses = playerClassRepository.findAllById(dto.additionalClassIds());
+            character.setAdditionalClasses(additionalClasses);
+        } else {
+            character.setAdditionalClasses(List.of());
+        }
+
+        if (dto.featureIds() != null) {
+            List<Feature> features = featureRepository.findAllById(dto.featureIds());
+            character.setFeatures(features);
+        } else {
+            character.setFeatures(List.of());
+        }
+
+        if (dto.magicIds() != null) {
+            List<Magic> magics = magicRepository.findAllById(dto.magicIds());
+            character.setMagics(magics);
+        } else {
+            character.setMagics(List.of());
+        }
+
+        return convertToDTO(characterRepository.save(character));
+    }
+
     private CharacterDTO convertToDTO(Character character) {
         List<String> featureIds = character.getFeatures() != null
                 ? character.getFeatures().stream().map(Feature::getId).collect(Collectors.toList())

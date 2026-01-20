@@ -8,7 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CharacterService } from '../character.service';
 import { RacialTraitsService } from '../../core/services/racial-traits.service';
 import { PlayerClassService } from '../../core/services/player-class.service';
@@ -50,6 +50,7 @@ export class CharacterFormComponent implements OnInit {
     classes: PlayerClass[] = [];
     features: Feature[] = [];
     magics: Magic[] = [];
+    isEditMode = false;
 
     constructor(
         private characterService: CharacterService,
@@ -58,6 +59,7 @@ export class CharacterFormComponent implements OnInit {
         private featuresService: FeatureService,
         private magicsService: MagicService,
         private router: Router,
+        private route: ActivatedRoute,
         private authService: AuthService
     ) { }
 
@@ -70,6 +72,12 @@ export class CharacterFormComponent implements OnInit {
             // Handle unauthenticated state
         }
         this.loadDependencies();
+
+        const id = this.route.snapshot.paramMap.get('id');
+        if (id) {
+            this.isEditMode = true;
+            this.loadCharacter(id);
+        }
     }
 
     loadDependencies(): void {
@@ -85,11 +93,30 @@ export class CharacterFormComponent implements OnInit {
         this.magicsService.getAllMagics().then((response: any) => this.magics = response.data).catch(err => console.error('Error loading magics', err));
     }
 
-    save(): void {
-        this.characterService.createCharacter(this.character).subscribe({
-            next: () => this.router.navigate(['/characters']),
-            error: (err) => console.error('Error saving character', err)
+    loadCharacter(id: string): void {
+        this.characterService.getCharacterById(id).subscribe({
+            next: (char) => {
+                this.character = char;
+                // Ensure array fields are initialized if null
+                if (!this.character.featureIds) this.character.featureIds = [];
+                if (!this.character.magicIds) this.character.magicIds = [];
+            },
+            error: (err) => console.error('Error loading character', err)
         });
+    }
+
+    save(): void {
+        if (this.isEditMode && this.character.id) {
+            this.characterService.updateCharacter(this.character.id, this.character).subscribe({
+                next: () => this.router.navigate(['/characters']),
+                error: (err) => console.error('Error updating character', err)
+            });
+        } else {
+            this.characterService.createCharacter(this.character).subscribe({
+                next: () => this.router.navigate(['/characters']),
+                error: (err) => console.error('Error saving character', err)
+            });
+        }
     }
 
     cancel(): void {

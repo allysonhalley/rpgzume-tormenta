@@ -1,6 +1,6 @@
 .container {
     padding: 20px;
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
@@ -13,14 +13,53 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     mat-icon {
         color: #555;
     }
 }
 
-.section {
-    padding: 16px 0;
+.tab-content {
+    padding: 20px;
+}
+
+.inner-tab-content {
+    padding: 10px 0;
+}
+
+.class-header {
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.traits-section {
+
+    /* Removed background/border/padding to look more like a native list in the tab */
+    ul {
+        padding-left: 20px;
+        margin: 10px 0;
+    }
+
+    li {
+        margin-bottom: 5px;
+    }
+}
+
+.full-text {
+    white-space: normal !important;
+    height: auto !important;
+    margin-top: 5px;
+    display: block;
+    line-height: 1.5;
+
+    ul {
+        padding-left: 20px;
+        margin: 5px 0;
+    }
+
+    li {
+        margin-bottom: 3px;
+    }
 }
 
 .loading-container {
@@ -29,4 +68,116 @@
     padding: 50px;
     font-size: 1.2rem;
     color: #666;
+}
+
+.empty-msg {
+    padding: 20px;
+    color: #888;
+    font-style: italic;
+}
+
+/* Ensure list items can expand */
+/* Override specific material classes to allow dynamic height */
+/* Ensure list items can expand */
+/* Override specific material classes to allow dynamic height */
+::ng-deep .class-ability-item,
+::ng-deep .feature-item,
+::ng-deep .magic-item {
+    height: auto !important;
+    min-height: 48px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+
+    .mdc-list-item__content {
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    .mat-mdc-list-item-line {
+        white-space: pre-wrap !important;
+        /* Fallback for newlines if split fails */
+        text-overflow: clip !important;
+        overflow: visible !important;
+        display: block !important;
+        -webkit-line-clamp: unset !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    .mat-mdc-list-item-title {
+        white-space: normal !important;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.class-ability-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    mat-card-header {
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        mat-card-title {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+        }
+
+        mat-card-subtitle {
+            font-weight: bold;
+            color: gray;
+        }
+    }
+
+    mat-card-content {
+        flex-grow: 1;
+
+        .ability-description {
+            margin-top: 12px;
+
+            .clean-list {
+                padding-left: 20px;
+                margin: 5px 0;
+
+                li {
+                    margin-bottom: 3px;
+                }
+            }
+
+            .empty-desc {
+                color: #888;
+                font-size: 0.9em;
+            }
+        }
+    }
+
+    mat-card-content {
+        p {
+            margin: 4px 0;
+            line-height: 1.3;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            text-align: justify;
+            text-align-last: left;
+        }
+    }
+
+    mat-card-footer {
+        padding: 0 16px 16px 16px;
+        margin-top: 8px;
+        font-size: 0.9em;
+        color: gray;
+    }
 }

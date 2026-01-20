@@ -32,4 +32,8 @@ export class CharacterService {
     deleteCharacter(id: string): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }
+
+    updateCharacter(id: string, character: Character): Observable<Character> {
+        return this.http.put<Character>(`${this.apiUrl}/${id}`, character);
+    }
 }
