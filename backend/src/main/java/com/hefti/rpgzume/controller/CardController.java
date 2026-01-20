@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/cards") // Prefixo REST comum
-@CrossOrigin(origins = "http://localhost:4200") // Permite chamadas do Angular
+@CrossOrigin(origins = "*") // Permite chamadas de qualquer origem (Vercel)
 public class CardController {
 
     @Autowired
