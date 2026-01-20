@@ -4,11 +4,13 @@ import { Observable, of } from 'rxjs';
 import { PlayerClass } from '../models/models';
 import { isPlatformBrowser } from '@angular/common';
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
 export class PlayerClassService {
-    private apiUrl = '/api/player-classes';
+    private apiUrl = `${environment.apiUrl}/player-classes`;
 
     constructor(
         private http: HttpClient,

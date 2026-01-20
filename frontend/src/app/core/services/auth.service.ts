@@ -5,11 +5,13 @@ import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private apiUrl = '/api/auth';
+    private apiUrl = `${environment.apiUrl}/auth`;
     private tokenKey = 'auth_token';
     private currentUserSubject = new BehaviorSubject<any>(null);
 

@@ -2,7 +2,9 @@ import axios from 'axios';
 import { Injectable } from '@angular/core';
 import { Card } from '../models/models';
 
-const API_BASE_URL = '/api/cards';
+import { environment } from '../../../environments/environment';
+
+const API_BASE_URL = `${environment.apiUrl}/cards`;
 
 @Injectable({
   providedIn: 'root',

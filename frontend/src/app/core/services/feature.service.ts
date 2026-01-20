@@ -2,7 +2,9 @@ import axios from 'axios';
 import { Injectable } from '@angular/core';
 import { Feature } from '../models/models';
 
-const API_BASE_URL = '/api/features';
+import { environment } from '../../../environments/environment';
+
+const API_BASE_URL = `${environment.apiUrl}/features`;
 
 @Injectable({
   providedIn: 'root',

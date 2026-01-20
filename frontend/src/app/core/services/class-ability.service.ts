@@ -4,11 +4,13 @@ import { Observable, of } from 'rxjs';
 import { ClassAbility } from '../models/models';
 import { isPlatformBrowser } from '@angular/common';
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
 export class ClassAbilityService {
-    private apiUrl = '/api/class-abilities';
+    private apiUrl = `${environment.apiUrl}/class-abilities`;
 
     constructor(
         private http: HttpClient,

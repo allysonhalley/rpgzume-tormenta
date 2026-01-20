@@ -4,11 +4,13 @@ import { Observable, of } from 'rxjs';
 import { RacialTraits } from '../models/models';
 import { isPlatformBrowser } from '@angular/common';
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
 export class RacialTraitsService {
-    private apiUrl = '/api/racial-traits';
+    private apiUrl = `${environment.apiUrl}/racial-traits`;
 
     constructor(
         private http: HttpClient,
