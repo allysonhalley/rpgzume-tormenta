@@ -73,12 +73,16 @@ export class CharacterFormComponent implements OnInit {
     }
 
     loadDependencies(): void {
-        this.racialTraitsService.getAllRacialTraits().subscribe((data: RacialTraits[]) => this.races = data);
-        this.playerClassService.getAllPlayerClasses().subscribe((data: PlayerClass[]) => {
-            this.classes = data;
+        this.racialTraitsService.getAllRacialTraits().subscribe({
+            next: (data: RacialTraits[]) => this.races = data,
+            error: (err) => console.error('Error loading races', err)
         });
-        this.featuresService.getAllFeatures().then((response: any) => this.features = response.data);
-        this.magicsService.getAllMagics().then((response: any) => this.magics = response.data);
+        this.playerClassService.getAllPlayerClasses().subscribe({
+            next: (data: PlayerClass[]) => this.classes = data,
+            error: (err) => console.error('Error loading classes', err)
+        });
+        this.featuresService.getAllFeatures().then((response: any) => this.features = response.data).catch(err => console.error('Error loading features', err));
+        this.magicsService.getAllMagics().then((response: any) => this.magics = response.data).catch(err => console.error('Error loading magics', err));
     }
 
     save(): void {

@@ -66,6 +66,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/magics/**").permitAll()
                         .requestMatchers("/api/racial-traits/**").permitAll()
                         .requestMatchers("/api/class-abilities/**").permitAll()
+                        .requestMatchers("/api/player-classes/**").permitAll()
                         .requestMatchers("/api/characters/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated());
