@@ -150,9 +150,15 @@
             .clean-list {
                 padding-left: 20px;
                 margin: 5px 0;
+                list-style-type: disc;
 
                 li {
                     margin-bottom: 3px;
+
+                    &::marker {
+                        color: #333;
+                        /* Ensure marker is visible and dark */
+                    }
                 }
             }
 

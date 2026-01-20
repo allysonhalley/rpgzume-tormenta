@@ -143,8 +143,15 @@ export class CharacterShowComponent implements OnInit {
     formatTextToList(text: string | null | undefined): string[] {
         if (!text) return [];
         // Handle escaped newlines \\n which might come from DB as literal string
-        const formatted = text.replace(/\\n/g, '\n');
-        return formatted.split(/[;\n]+/).map(t => t.trim().replace(/^[-*]\s*/, '')).filter(t => t.length > 0);
+        let formatted = text.replace(/\\n/g, '\n');
+        // Handle \r\n as \n
+        formatted = formatted.replace(/\r\n/g, '\n');
+
+        // Split by semicolon or newline
+        // Remove empty strings
+        return formatted.split(/[;\n]+/)
+            .map(t => t.trim().replace(/^[-*]\s*/, '')) // Remove existing bullet markers
+            .filter(t => t.length > 0);
     }
 
     parseAbilityLine(line: string): { label: string | null, text: string } {

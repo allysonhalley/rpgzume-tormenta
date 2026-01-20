@@ -17,12 +17,27 @@
                         </mat-card-header>
                         <mat-card-content>
                             <mat-divider></mat-divider>
-                            <p class="description"><strong>Descrição: </strong>{{ ability.description }}</p>
+                            <div class="description-content">
+                                <ng-container *ngIf="formatTextToList(ability.description).length > 1; else simpleDesc">
+                                    <p><strong>Descrição:</strong></p>
+                                    <ul class="clean-list">
+                                        <li *ngFor="let part of formatTextToList(ability.description)">
+                                            <ng-container *ngIf="parseAbilityLine(part) as parsed">
+                                                <strong *ngIf="parsed.label">{{ parsed.label }}:</strong>
+                                                <span [innerHTML]="parseBold(parsed.text)"></span>
+                                            </ng-container>
+                                        </li>
+                                    </ul>
+                                </ng-container>
+                                <ng-template #simpleDesc>
+                                    <p class="description"><strong>Descrição: </strong>{{ ability.description }}</p>
+                                </ng-template>
+                            </div>
 
                             <div class="traits-section" *ngIf="ability.abilities">
                                 <h4>Habilidades:</h4>
-                                <ul>
-                                    <li *ngFor="let item of getAbilitiesList(ability.abilities)">{{ item }}</li>
+                                <ul class="clean-list">
+                                    <li *ngFor="let item of formatTextToList(ability.abilities)">{{ item }}</li>
                                 </ul>
                             </div>
                         </mat-card-content>
