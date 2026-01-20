@@ -18,7 +18,8 @@ export const appRoutes: Routes = [
       { path: 'class-abilities', loadChildren: () => import('./class-abilities/class-abilities.module').then(m => m.ClassAbilitiesModule) },
       { path: 'characters', loadComponent: () => import('./characters/character-list/character-list.component').then(m => m.CharacterListComponent) },
       { path: 'characters/new', loadComponent: () => import('./characters/character-form/character-form.component').then(m => m.CharacterFormComponent) },
-      { path: 'characters/edit/:id', loadComponent: () => import('./characters/character-form/character-form.component').then(m => m.CharacterFormComponent) }
+      { path: 'characters/edit/:id', loadComponent: () => import('./characters/character-form/character-form.component').then(m => m.CharacterFormComponent) },
+      { path: 'characters/show/:id', loadComponent: () => import('./characters/character-show/character-show.component').then(m => m.CharacterShowComponent) }
     ]
   },
   { path: '**', redirectTo: '' } // Página não encontrada

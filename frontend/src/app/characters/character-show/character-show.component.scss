@@ -1,0 +1,32 @@
+.container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.char-card {
+    margin-top: 20px;
+}
+
+.char-avatar {
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    mat-icon {
+        color: #555;
+    }
+}
+
+.section {
+    padding: 16px 0;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 50px;
+    font-size: 1.2rem;
+    color: #666;
+}
