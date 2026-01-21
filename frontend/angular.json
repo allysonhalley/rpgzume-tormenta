@@ -27,9 +27,7 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/vercel.json",
-              "src/vercel.json"
+              "src/assets"
             ],
             "styles": [
               "src/styles.scss"
